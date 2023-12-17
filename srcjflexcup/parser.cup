@@ -1,0 +1,182 @@
+import java_cup.runtime.*;
+
+class Parser;
+
+
+/* Token terminali */
+
+terminal String VAR, COLON, ASSIGN, SEMI, ID, COMMA, STRING_CONST, REAL, INTEGER, STRING, BOOLEAN, RETURN, FUNCTION, TYPERETURN, ENDFUNCTION;
+terminal String LPAR, RPAR, PROCEDURE, ENDPROCEDURE, OUT, WRITE, WRITERETURN, DOLLARSIGN, READ, IF, THEN, ELSE, ENDIF, ELIF, WHILE, DO, ENDWHILE;
+terminal String PLUS, MINUS, TIMES, DIV, EQ, NE, LT, LE, GT, GE, AND, OR, NOT, ENDVAR, REF;
+
+terminal Integer INTEGER_CONST;
+terminal Float REAL_CONST;
+terminal Boolean TRUE, FALSE;
+
+/* Token Non terminali */
+
+non terminal String Program;
+non terminal String Iter1;
+non terminal String Iter2;
+non terminal String VarDecl;
+non terminal String Decls;
+non terminal String Ids;
+non terminal String Consts;
+non terminal String Const;
+non terminal String Type;
+non terminal String Function;
+non terminal String FuncParams;
+non terminal String OtherFuncParams;
+non terminal String Types;
+non terminal String Procedure ;
+non terminal String ProcParams;
+non terminal String OtherProcParams;
+non terminal String ProcParamId;
+non terminal String Body;
+non terminal String Stat;
+non terminal String FunCall;
+non terminal String ProcCall;
+non terminal String IfStat;
+non terminal String Elifs;
+non terminal String Elif;
+non terminal String Else;
+non terminal String WhileStat;
+non terminal String IOArgs;
+non terminal String ProcExprs;
+non terminal String Exprs;
+non terminal String Expr;
+
+
+/* Precedenze */
+precedence left OR;
+precedence left AND;
+precedence right NOT;
+precedence nonassoc LT, LE, EQ, NE, GT, GE;
+precedence left TIMES, DIV;
+precedence left MINUS, PLUS;
+precedence left LPAR, RPAR;
+
+Program ::= Iter1 Procedure Iter2 ;
+
+Iter1 ::= VarDecl Iter1
+      | Function Iter1
+      | /* empty */ ;
+
+Iter2 ::= VarDecl Iter2
+      | Function Iter2
+      | Procedure Iter2
+      | /* empty */ ;
+
+
+VarDecl ::= VAR Decls ;
+
+Decls ::= Ids COLON Type SEMI Decls
+	| Ids ASSIGN Consts SEMI Decls
+	| Ids COLON Type SEMI ENDVAR
+	| Ids ASSIGN Consts SEMI ENDVAR ;
+
+Ids ::= ID COMMA Ids
+        | ID ;
+
+Consts ::= Const COMMA Consts
+	| Const ;
+
+Const ::= REAL_CONST
+	| INTEGER_CONST
+	| STRING_CONST
+	| TRUE
+	| FALSE ;
+
+Type ::= REAL
+	| INTEGER
+	| STRING
+	| BOOLEAN ;
+
+Function  ::= FUNCTION ID LPAR FuncParams RPAR TYPERETURN Types COLON Body ENDFUNCTION ;
+
+FuncParams ::= ID COLON Type OtherFuncParams
+	    | /* empty */ ;
+
+OtherFuncParams ::= COMMA ID COLON Type OtherFuncParams
+	    | /* empty */ ;
+
+
+Types ::= Type COMMA Types
+	| Type ;
+
+Procedure ::= PROCEDURE ID LPAR ProcParams RPAR COLON Body ENDPROCEDURE ;
+
+ProcParams::= ProcParamId COLON Type OtherProcParams
+	   | /* empty */ ;
+
+OtherProcParams ::= COMMA ProcParamId COLON Type OtherProcParams
+	   | /* empty */ ;
+
+ProcParamId ::= ID
+	    | OUT ID ;
+
+Body ::= VarDecl Body
+	| Stat Body
+	| /* empty */ ;
+
+Stat ::= Ids ASSIGN Exprs SEMI
+	 | ProcCall  SEMI
+	 | RETURN Exprs SEMI
+	 | WRITE IOArgs SEMI
+	 | WRITERETURN IOArgs SEMI
+	 | READ IOArgs SEMI
+	 | IfStat SEMI
+	 | WhileStat SEMI ;
+
+FunCall ::= ID LPAR Exprs RPAR           /* chiamata con almeno un parametro */
+         | ID LPAR RPAR ;                   /* chiamata con nessun parametro */
+
+ProcCall ::= ID LPAR ProcExprs RPAR    /* chiamata con almeno un parametro */
+         | ID LPAR RPAR  ;           /* chiamata con nessun parametro */
+
+IfStat ::= IF Expr THEN Body Elifs Else ENDIF ;
+
+Elifs ::= Elif Elifs
+      | /* empty */ 	   ;
+
+Elif ::= ELIF Expr THEN Body ;
+
+Else ::= ELSE Body
+     | /* empty */ ;
+
+WhileStat ::= WHILE Expr DO Body ENDWHILE ;
+
+IOArgs ::= Expr IOArgs    /* qui l'Expr corretta è concatenazione di stringhe o singola stringa*/
+       |  DOLLARSIGN LPAR Expr RPAR IOArgs
+       | /* empty */  ;
+
+ProcExprs::= Expr COMMA ProcExprs
+	  | REF ID COMMA ProcExprs
+          | Expr
+	  | REF ID ;
+
+Exprs ::= Expr COMMA Exprs
+	| Expr ;
+
+Expr ::= FunCall
+	| REAL_CONST
+    | INTEGER_CONST
+	| STRING_CONST
+	| ID
+    | TRUE
+    | FALSE
+    | Expr  PLUS Expr
+	| Expr  MINUS Expr
+	| Expr  TIMES Expr
+	| Expr  DIV Expr
+	| Expr  AND Expr
+	| Expr  OR Expr
+	| Expr  GT Expr
+	| Expr  GE Expr
+	| Expr  LT Expr
+	| Expr  LE Expr
+	| Expr  EQ Expr
+	| Expr  NE Expr
+	| LPAR Expr RPAR
+	| MINUS Expr
+	| NOT Expr ;
