@@ -2,12 +2,26 @@ import java_cup.runtime.*;
 
 class Parser;
 
+parser code{:
+
+    public void report_error(String msg, Object info) {
+      Symbol sym = (Symbol)info;
+      System.out.println(msg + ": " + symbl_name_from_id(sym.sym));
+    }
+
+    public void syntax_error(Symbol s){
+        System.out.println("compiler has detected a syntax error at line " + s.left
+            + " column " + s.right);
+    }
+
+:}
+
 
 /* Token terminali */
 
 terminal String VAR, COLON, ASSIGN, SEMI, ID, COMMA, STRING_CONST, REAL, INTEGER, STRING, BOOLEAN, RETURN, FUNCTION, TYPERETURN, ENDFUNCTION;
 terminal String LPAR, RPAR, PROCEDURE, ENDPROCEDURE, OUT, WRITE, WRITERETURN, DOLLARSIGN, READ, IF, THEN, ELSE, ENDIF, ELIF, WHILE, DO, ENDWHILE;
-terminal String PLUS, MINUS, TIMES, DIV, EQ, NE, LT, LE, GT, GE, AND, OR, NOT, ENDVAR, REF;
+terminal String PLUS, MINUS, TIMES, DIV, EQ, NE, LT, LE, GT, GE, AND, OR, NOT, ENDVAR, REF, UMINUS;
 
 terminal Integer INTEGER_CONST;
 terminal Float REAL_CONST;
@@ -52,9 +66,11 @@ precedence left OR;
 precedence left AND;
 precedence right NOT;
 precedence nonassoc LT, LE, EQ, NE, GT, GE;
+precedence left  MINUS, PLUS;
 precedence left TIMES, DIV;
-precedence left MINUS, PLUS;
+precedence left UMINUS;
 precedence left LPAR, RPAR;
+
 
 Program ::= Iter1 Procedure Iter2 ;
 
@@ -178,5 +194,5 @@ Expr ::= FunCall
 	| Expr  EQ Expr
 	| Expr  NE Expr
 	| LPAR Expr RPAR
-	| MINUS Expr
+	| UMINUS Expr  %prec UMINUS
 	| NOT Expr ;

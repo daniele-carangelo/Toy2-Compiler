@@ -10,8 +10,9 @@ public interface ParserSym {
   /* terminals */
   public static final int FUNCTION = 14;
   public static final int GE = 43;
+  public static final int UMINUS = 49;
   public static final int ENDVAR = 47;
-  public static final int INTEGER_CONST = 49;
+  public static final int INTEGER_CONST = 50;
   public static final int INTEGER = 10;
   public static final int SEMI = 5;
   public static final int OUT = 21;
@@ -38,7 +39,7 @@ public interface ParserSym {
   public static final int EOF = 0;
   public static final int BOOLEAN = 12;
   public static final int RETURN = 13;
-  public static final int TRUE = 51;
+  public static final int TRUE = 52;
   public static final int error = 1;
   public static final int EQ = 38;
   public static final int DOLLARSIGN = 24;
@@ -49,12 +50,12 @@ public interface ParserSym {
   public static final int ELSE = 28;
   public static final int READ = 25;
   public static final int WHILE = 31;
-  public static final int REAL_CONST = 50;
+  public static final int REAL_CONST = 51;
   public static final int THEN = 27;
   public static final int NE = 39;
   public static final int LPAR = 17;
   public static final int STRING = 11;
-  public static final int FALSE = 52;
+  public static final int FALSE = 53;
   public static final int STRING_CONST = 8;
   public static final int GT = 42;
   public static final int VAR = 2;
@@ -111,6 +112,7 @@ public interface ParserSym {
   "NOT",
   "ENDVAR",
   "REF",
+  "UMINUS",
   "INTEGER_CONST",
   "REAL_CONST",
   "TRUE",
