@@ -1,5 +1,13 @@
 import java_cup.runtime.*;
 
+import esercitazione4.Expression.*;
+import esercitazione4.Node.*;
+import esercitazione4.Statement.*;
+import esercitazione4.Expression.ConstOP.*;
+import esercitazione4.Expression.Operation.*;
+import esercitazione4.Expression.RelOp.*;
+import java.util.LinkedList;
+
 class Parser;
 
 parser code{:
@@ -29,36 +37,36 @@ terminal Boolean TRUE, FALSE;
 
 /* Token Non terminali */
 
-non terminal String Program;
-non terminal String Iter1;
-non terminal String Iter2;
-non terminal String VarDecl;
-non terminal String Decls;
-non terminal String Ids;
-non terminal String Consts;
-non terminal String Const;
-non terminal String Type;
-non terminal String Function;
-non terminal String FuncParams;
-non terminal String OtherFuncParams;
-non terminal String Types;
-non terminal String Procedure ;
-non terminal String ProcParams;
-non terminal String OtherProcParams;
-non terminal String ProcParamId;
-non terminal String Body;
-non terminal String Stat;
-non terminal String FunCall;
-non terminal String ProcCall;
-non terminal String IfStat;
-non terminal String Elifs;
-non terminal String Elif;
-non terminal String Else;
-non terminal String WhileStat;
-non terminal String IOArgs;
-non terminal String ProcExprs;
-non terminal String Exprs;
-non terminal String Expr;
+non terminal ProgramOp Program;
+non terminal IterOp Iter1;
+non terminal IterOp Iter2;
+non terminal LinkedList<VarDeclOp> VarDecl;
+non terminal VarDeclOp Decls;
+non terminal LinkedList<IdOp> Ids;
+non terminal LinkedList<Expr> Consts;
+non terminal Expr Const;
+non terminal TypeOp Type;
+non terminal FunOp Function;
+non terminal FuncParamsOp FuncParams;
+non terminal LinkedList<FuncParamsOp> OtherFuncParams;
+non terminal LinkedList<TypeOp> Types;
+non terminal ProcedureOp Procedure ;
+non terminal ProcParamsOp ProcParams;
+non terminal LinkedList<ProcParamsOp> OtherProcParams;
+non terminal ProcParamIdOp ProcParamId;
+non terminal BodyOp Body;
+non terminal Statement Stat;
+non terminal FunCallOp FunCall;
+non terminal ProcCallOp ProcCall;
+non terminal IfStatOp IfStat;
+non terminal LinkedList<ElifOp> Elifs;
+non terminal ElifOp Elif;
+non terminal ElseOp Else;
+non terminal WhileStatOp WhileStat;
+non terminal LinkedList<Expr> IOArgs;
+non terminal ProcExprsOp ProcExprs;
+non terminal LinkedList<Expr> Exprs;
+non terminal Expr Expr;
 
 
 /* Precedenze */
@@ -71,31 +79,45 @@ precedence left TIMES, DIV;
 precedence left UMINUS;
 precedence left LPAR, RPAR;
 
+/*---------------------------------------------------------------------------------*/
 
 Program ::= Iter1 Procedure Iter2 ;
+
+/*---------------------------------------------------------------------------------*/
 
 Iter1 ::= VarDecl Iter1
       | Function Iter1
       | /* empty */ ;
+
+/*---------------------------------------------------------------------------------*/
 
 Iter2 ::= VarDecl Iter2
       | Function Iter2
       | Procedure Iter2
       | /* empty */ ;
 
+/*---------------------------------------------------------------------------------*/
 
 VarDecl ::= VAR Decls ;
+
+/*---------------------------------------------------------------------------------*/
 
 Decls ::= Ids COLON Type SEMI Decls
 	| Ids ASSIGN Consts SEMI Decls
 	| Ids COLON Type SEMI ENDVAR
 	| Ids ASSIGN Consts SEMI ENDVAR ;
 
+/*---------------------------------------------------------------------------------*/
+
 Ids ::= ID COMMA Ids
         | ID ;
 
+/*---------------------------------------------------------------------------------*/
+
 Consts ::= Const COMMA Consts
 	| Const ;
+
+/*---------------------------------------------------------------------------------*/
 
 Const ::= REAL_CONST
 	| INTEGER_CONST
@@ -103,37 +125,58 @@ Const ::= REAL_CONST
 	| TRUE
 	| FALSE ;
 
+/*---------------------------------------------------------------------------------*/
+
 Type ::= REAL
 	| INTEGER
 	| STRING
 	| BOOLEAN ;
 
+/*---------------------------------------------------------------------------------*/
+
 Function  ::= FUNCTION ID LPAR FuncParams RPAR TYPERETURN Types COLON Body ENDFUNCTION ;
+
+/*---------------------------------------------------------------------------------*/
 
 FuncParams ::= ID COLON Type OtherFuncParams
 	    | /* empty */ ;
 
+/*---------------------------------------------------------------------------------*/
+
 OtherFuncParams ::= COMMA ID COLON Type OtherFuncParams
 	    | /* empty */ ;
 
+/*---------------------------------------------------------------------------------*/
 
 Types ::= Type COMMA Types
 	| Type ;
 
+/*---------------------------------------------------------------------------------*/
+
 Procedure ::= PROCEDURE ID LPAR ProcParams RPAR COLON Body ENDPROCEDURE ;
+
+/*---------------------------------------------------------------------------------*/
 
 ProcParams::= ProcParamId COLON Type OtherProcParams
 	   | /* empty */ ;
 
+/*---------------------------------------------------------------------------------*/
+
 OtherProcParams ::= COMMA ProcParamId COLON Type OtherProcParams
 	   | /* empty */ ;
+
+/*---------------------------------------------------------------------------------*/
 
 ProcParamId ::= ID
 	    | OUT ID ;
 
+/*---------------------------------------------------------------------------------*/
+
 Body ::= VarDecl Body
 	| Stat Body
 	| /* empty */ ;
+
+/*---------------------------------------------------------------------------------*/
 
 Stat ::= Ids ASSIGN Exprs SEMI
 	 | ProcCall  SEMI
@@ -144,55 +187,86 @@ Stat ::= Ids ASSIGN Exprs SEMI
 	 | IfStat SEMI
 	 | WhileStat SEMI ;
 
+/*---------------------------------------------------------------------------------*/
+
 FunCall ::= ID LPAR Exprs RPAR           /* chiamata con almeno un parametro */
          | ID LPAR RPAR ;                   /* chiamata con nessun parametro */
+
+/*---------------------------------------------------------------------------------*/
 
 ProcCall ::= ID LPAR ProcExprs RPAR    /* chiamata con almeno un parametro */
          | ID LPAR RPAR  ;           /* chiamata con nessun parametro */
 
+/*---------------------------------------------------------------------------------*/
+
 IfStat ::= IF Expr THEN Body Elifs Else ENDIF ;
+
+/*---------------------------------------------------------------------------------*/
 
 Elifs ::= Elif Elifs
       | /* empty */ 	   ;
 
+/*---------------------------------------------------------------------------------*/
+
 Elif ::= ELIF Expr THEN Body ;
+
+/*---------------------------------------------------------------------------------*/
 
 Else ::= ELSE Body
      | /* empty */ ;
 
+/*---------------------------------------------------------------------------------*/
+
 WhileStat ::= WHILE Expr DO Body ENDWHILE ;
 
-IOArgs ::= Expr IOArgs    /* qui l'Expr corretta è concatenazione di stringhe o singola stringa*/
-       |  DOLLARSIGN LPAR Expr RPAR IOArgs
-       | /* empty */  ;
+/*---------------------------------------------------------------------------------*/
 
-ProcExprs::= Expr COMMA ProcExprs
-	  | REF ID COMMA ProcExprs
-          | Expr
-	  | REF ID ;
+IOArgs ::= Expr  |                                             //ammette una sola stringa oppure una concatenazione
+           Expr DOLLARSIGN LPAR Expr RPAR IOArgs   |           //ammette una stringa (o concatenazione), un passaggio di parametri ed eventuali altri passaggi e/o stringhe
+           DOLLARSIGN LPAR Expr RPAR IOArgs     |              //ammette un passaggio di parametri ed eventuali altri passaggi e/o stringhe
+           /* empty */   ;                                     //serve per terminare le ricorsioni
 
-Exprs ::= Expr COMMA Exprs
-	| Expr ;
+/*---------------------------------------------------------------------------------*/
 
+ProcExprs::= Expr:expr COMMA ProcExprs:procExprs    {: procExprs.getExprs().addFirst(expr);
+                                                       RESULT = procExprs; :}
+	  | REF ID:id COMMA ProcExprs:procExprs  {: procExprs.getRefId().addFirst(new IdOp(id));
+	                                            RESULT = procExprs; :}
+      | Expr:expr  {: LinkedList<Expr> exprs = new LinkedList<>();
+                      exprs.addFirst(expr);
+                      RESULT = new ProcExprsOp(exprs, new LinkedList<>());:}
+	  | REF ID:id  {: LinkedList<IdOp> refIds = new LinkedList<>();
+	                  refIds.addFirst(new IdOp(id));
+	                  RESULT = new ProcExprsOp(new LinkedList<>() ,refIds); :}    ;
+
+/*---------------------------------------------------------------------------------*/
+
+Exprs ::= Expr:expr COMMA Exprs:exprs  {: exprs.addFirst(expr);
+                                          RESULT = exprs; :}
+	| Expr:expr {: LinkedList<Expr> exprList = new LinkedList<>();
+                   exprList.addFirst(expr);
+                   RESULT = exprList;  :}  ;
+
+/*---------------------------------------------------------------------------------*/
 Expr ::= FunCall
-	| REAL_CONST
-    | INTEGER_CONST
-	| STRING_CONST
-	| ID
-    | TRUE
-    | FALSE
-    | Expr  PLUS Expr
-	| Expr  MINUS Expr
-	| Expr  TIMES Expr
-	| Expr  DIV Expr
-	| Expr  AND Expr
-	| Expr  OR Expr
-	| Expr  GT Expr
-	| Expr  GE Expr
-	| Expr  LT Expr
-	| Expr  LE Expr
-	| Expr  EQ Expr
-	| Expr  NE Expr
-	| LPAR Expr RPAR
-	| UMINUS Expr  %prec UMINUS
-	| NOT Expr ;
+	| REAL_CONST:realConst       {: RESULT = new  RealOp(realConst); :}
+    | INTEGER_CONST:intConst     {: RESULT = new IntegerOp(intConst); :}
+	| STRING_CONST:stringConst    {: RESULT = new StringOp(stringConst); :}
+	| ID:id                      {: RESULT = new IdOp(id); :}
+    | TRUE                       {: RESULT = new TrueOp();  :}
+    | FALSE                      {: RESULT = new FalseOp(); :}
+    | Expr:e1  PLUS Expr:e2      {: RESULT = new AddOp(e1,e2); :}
+	| Expr:e1  MINUS Expr:e2     {: RESULT = new DiffOp(e1,e2);:}
+	| Expr:e1  TIMES Expr:e2     {: RESULT = new MulOp(e1,e2); :}
+	| Expr:e1  DIV Expr:e2       {: RESULT = new DivOp(e1,e2); :}
+	| Expr:e1  AND Expr:e2       {: RESULT = new AndOp(e1,e2); :}
+	| Expr:e1  OR Expr:e2        {: RESULT = new OrOp(e1,e2); :}
+	| Expr:e1  GT Expr:e2        {: RESULT = new GTOp(e1,e2); :}
+	| Expr:e1  GE Expr:e2        {: RESULT = new GEOp(e1,e2); :}
+	| Expr:e1  LT Expr:e2        {: RESULT = new LTOp(e1,e2); :}
+	| Expr:e1  LE Expr:e2        {: RESULT = new LEOp(e1,e2); :}
+	| Expr:e1  EQ Expr:e2        {: RESULT = new EQOp(e1,e2); :}
+	| Expr:e1  NE Expr:e2        {: RESULT = new NEOp(e1,e2); :}
+	| LPAR Expr:e1 RPAR          {: RESULT = new ParOp(e1); :}
+	| MINUS Expr:e               {: RESULT = new UminusOp(e); :} %prec UMINUS
+	| NOT Expr:e                 {: RESULT = new NotOp(e); :}   ;
