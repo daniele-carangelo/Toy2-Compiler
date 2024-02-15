@@ -9,30 +9,34 @@ public class IfStatOp extends Statement{
 
     private Expr expr;
     private BodyOp body;
-    private ElseOp elseOp;
     private LinkedList<ElifOp> elifS;
+    private BodyOp elseBody;
 
     public IfStatOp(Expr expr, BodyOp body){
         this.expr = expr;
         this.body = body;
+        this.elseBody = null;
+        this.elifS = null;
     }
 
-    public IfStatOp(Expr expr, BodyOp body,LinkedList<ElifOp> elifS, ElseOp elseOp ){
+    public IfStatOp(Expr expr, BodyOp body,LinkedList<ElifOp> elifS, BodyOp elseBody ){
         this.expr = expr;
         this.body = body;
         this.elifS = elifS;
-        this.elseOp = elseOp;
+        this.elseBody = elseBody;
     }
 
-    public IfStatOp(Expr expr, BodyOp body, ElseOp elseOp ){
+    public IfStatOp(Expr expr, BodyOp body, BodyOp elseBody ){
         this.expr = expr;
         this.body = body;
-        this.elseOp = elseOp;
+        this.elseBody = elseBody;
+        this.elifS = null;
     }
     public IfStatOp(Expr expr, BodyOp body,LinkedList<ElifOp> elifS ){
         this.expr = expr;
         this.body = body;
         this.elifS = elifS;
+        this.elseBody = null;
     }
 
     public Expr getExpr() {
@@ -51,19 +55,19 @@ public class IfStatOp extends Statement{
         this.body = body;
     }
 
-    public ElseOp getElseOp() {
-        return elseOp;
-    }
-
-    public void setElseOp(ElseOp elseOp) {
-        this.elseOp = elseOp;
-    }
-
     public LinkedList<ElifOp> getElifS() {
         return elifS;
     }
 
     public void setElifS(LinkedList<ElifOp> elifS) {
         this.elifS = elifS;
+    }
+
+    public BodyOp getElseBody() {
+        return elseBody;
+    }
+
+    public void setElseBody(BodyOp elseBody) {
+        this.elseBody = elseBody;
     }
 }

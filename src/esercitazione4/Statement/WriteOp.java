@@ -7,10 +7,10 @@ import java.util.LinkedList;
 public class WriteOp extends Statement{
 
     private LinkedList<Expr> IOArgs;
-    private String type;
+    private Boolean returnType;
 
-    public WriteOp(String type, LinkedList<Expr> IOArgs){
-        this.type = type;
+    public WriteOp(Boolean returnType, LinkedList<Expr> IOArgs){
+        this.returnType = returnType;
         this.IOArgs = IOArgs;
     }
 
@@ -22,12 +22,12 @@ public class WriteOp extends Statement{
         this.IOArgs = IOArgs;
     }
 
-    public String getType() {
-        return type;
+    public Boolean getType() {
+        return returnType;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setType(Boolean returnType) {
+        this.returnType = returnType;
     }
 
 }

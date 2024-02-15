@@ -2,15 +2,20 @@ package esercitazione4.Node;
 
 import esercitazione4.Expression.IdOp;
 
+import java.util.LinkedList;
+
 public class FuncParamsOp {
 
     private IdOp id;
     private TypeOp type;
 
+
     public FuncParamsOp(IdOp id, TypeOp type){
         this.id = id;
         this.type = type;
     }
+
+
 
     public IdOp getId() {
         return id;

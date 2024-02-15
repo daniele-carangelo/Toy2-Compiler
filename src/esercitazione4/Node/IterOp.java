@@ -14,6 +14,12 @@ public class IterOp {
         this.varDecls =  varDecls;
     }
 
+    public IterOp(LinkedList<VarDeclOp> varDecls, LinkedList<FunOp> functions){
+        this.functions = functions;
+        this.varDecls =  varDecls;
+        this.procedures = null;
+    }
+
     public LinkedList<VarDeclOp> getVarDecls() {
         return varDecls;
     }

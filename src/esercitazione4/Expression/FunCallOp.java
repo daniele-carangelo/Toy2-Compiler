@@ -12,11 +12,6 @@ public class FunCallOp extends Expr{
         this.exprs = exprs;
     }
 
-    public FunCallOp(IdOp id){
-        this.id = id;
-    }
-
-
     public IdOp getId() {
         return id;
     }

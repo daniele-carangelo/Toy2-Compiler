@@ -2,35 +2,33 @@ package esercitazione4.Node;
 
 import esercitazione4.Statement.Statement;
 
+import java.util.LinkedList;
 
 
 public class BodyOp {
 
-    private VarDeclOp varDecl;
-    private Statement stmt;
+    private LinkedList<VarDeclOp> varDecl;
+    private LinkedList<Statement> stmt;
 
-    public BodyOp(VarDeclOp varDecl){
+    public BodyOp(LinkedList<VarDeclOp> varDecl, LinkedList<Statement> stmt ){
         this.varDecl = varDecl;
-    }
-
-
-    public BodyOp(Statement stmt){
         this.stmt = stmt;
     }
 
-    public VarDeclOp getVarDecl() {
+
+    public LinkedList<VarDeclOp> getVarDecl() {
         return varDecl;
     }
 
-    public void setVarDecl(VarDeclOp varDecl) {
+    public void setVarDecl(LinkedList<VarDeclOp> varDecl) {
         this.varDecl = varDecl;
     }
 
-    public Statement getStmt() {
+    public LinkedList<Statement> getStmt() {
         return stmt;
     }
 
-    public void setStmt(Statement stmt) {
+    public void setStmt(LinkedList<Statement> stmt) {
         this.stmt = stmt;
     }
 

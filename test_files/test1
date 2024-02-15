@@ -10,6 +10,7 @@
 
 % fa somma e restituisce anche la taglia del numero, oltre che il risultato%
 
+
 proc sommac(a: integer, d: integer, b:real, out size: string, out result: real):
 
 	result  ^=  a + b + c + d;
@@ -32,6 +33,7 @@ var c ^= 1;\
 
 
 % programma principale %
+
 proc main():
       var
 	a, b ^= 1, 2.2; x ^= 3;
@@ -63,6 +65,7 @@ endproc
 
 
 % stampa il messaggio dopo 4 ritorni a capo %
+
 func stampa(messaggio: string)-> string:
     var i ^= 0;\
     while i < 4 do
@@ -72,3 +75,5 @@ func stampa(messaggio: string)-> string:
      --> $(messaggio);
     return "ok";
 endfunc
+
+
