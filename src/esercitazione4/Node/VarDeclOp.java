@@ -2,6 +2,7 @@ package esercitazione4.Node;
 
 import esercitazione4.Expression.Expr;
 import esercitazione4.Expression.IdOp;
+import esercitazione4.visitor.Visitor;
 
 import java.util.LinkedList;
 
@@ -15,11 +16,13 @@ public class VarDeclOp {
     public VarDeclOp(LinkedList<IdOp> ids, TypeOp type){
         this.ids = ids;
         this.type = type;
+        this.constant = new LinkedList<>();
     }
 
     public VarDeclOp(LinkedList<IdOp> ids, LinkedList<Expr> constant){
         this.ids = ids;
         this.constant = constant;
+        this.type = null;
     }
 
     public LinkedList<IdOp> getIds() {
@@ -44,6 +47,9 @@ public class VarDeclOp {
 
     public void setType(TypeOp type) {
         this.type = type;
+    }
+    public Object accept(Visitor v){
+        return v.visit(this);
     }
 
 

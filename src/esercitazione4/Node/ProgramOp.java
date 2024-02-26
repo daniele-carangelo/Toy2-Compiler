@@ -1,5 +1,7 @@
 package esercitazione4.Node;
 
+import esercitazione4.visitor.Visitor;
+
 import java.util.LinkedList;
 
 public class ProgramOp {
@@ -40,4 +42,9 @@ public class ProgramOp {
     public void setProcedures(LinkedList<ProcedureOp> procedures) {
         this.procedures = procedures;
     }
+
+    public Object accept(Visitor v) throws Exception {
+        return v.visit(this);
+    }
+
 }

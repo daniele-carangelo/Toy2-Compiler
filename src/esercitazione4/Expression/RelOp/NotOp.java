@@ -1,6 +1,7 @@
 package esercitazione4.Expression.RelOp;
 
 import esercitazione4.Expression.Expr;
+import esercitazione4.visitor.Visitor;
 
 public class NotOp extends Expr {
 
@@ -17,4 +18,8 @@ public class NotOp extends Expr {
     public void setExpr(Expr expr) {
         this.expr = expr;
     }
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 }

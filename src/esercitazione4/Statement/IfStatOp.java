@@ -2,6 +2,7 @@ package esercitazione4.Statement;
 
 import esercitazione4.Expression.Expr;
 import esercitazione4.Node.BodyOp;
+import esercitazione4.visitor.Visitor;
 
 import java.util.LinkedList;
 
@@ -70,4 +71,9 @@ public class IfStatOp extends Statement{
     public void setElseBody(BodyOp elseBody) {
         this.elseBody = elseBody;
     }
+
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 }

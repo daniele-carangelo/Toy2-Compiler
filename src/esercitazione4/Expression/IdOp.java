@@ -1,5 +1,7 @@
 package esercitazione4.Expression;
 
+import esercitazione4.visitor.Visitor;
+
 public class IdOp extends Expr{
 
     private String name;
@@ -14,5 +16,9 @@ public class IdOp extends Expr{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Object accept(Visitor v){
+        return v.visit(this);
     }
 }

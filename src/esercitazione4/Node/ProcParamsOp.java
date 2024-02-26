@@ -1,5 +1,7 @@
 package esercitazione4.Node;
 
+import esercitazione4.visitor.Visitor;
+
 public class ProcParamsOp {
 
     private ProcParamIdOp paramId;
@@ -25,4 +27,8 @@ public class ProcParamsOp {
     public void setType(TypeOp type) {
         this.type = type;
     }
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 }

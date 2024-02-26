@@ -2,6 +2,7 @@ package esercitazione4.Statement;
 
 import esercitazione4.Expression.Expr;
 import esercitazione4.Expression.IdOp;
+import esercitazione4.visitor.Visitor;
 
 import java.util.LinkedList;
 
@@ -30,4 +31,9 @@ public class ProcExprsOp {
     public void setRefId(LinkedList<IdOp> refId) {
         this.refId = refId;
     }
+
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 }

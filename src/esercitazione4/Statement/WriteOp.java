@@ -1,6 +1,7 @@
 package esercitazione4.Statement;
 
 import esercitazione4.Expression.Expr;
+import esercitazione4.visitor.Visitor;
 
 import java.util.LinkedList;
 
@@ -29,5 +30,10 @@ public class WriteOp extends Statement{
     public void setType(Boolean returnType) {
         this.returnType = returnType;
     }
+
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 
 }

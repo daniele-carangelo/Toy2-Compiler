@@ -1,6 +1,7 @@
 package esercitazione4.Statement;
 
 import esercitazione4.Expression.IdOp;
+import esercitazione4.visitor.Visitor;
 
 public class ProcCallOp extends Statement{
 
@@ -29,4 +30,9 @@ public class ProcCallOp extends Statement{
     public void setProcExprs(ProcExprsOp procExprs) {
         this.procExprs = procExprs;
     }
+
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 }

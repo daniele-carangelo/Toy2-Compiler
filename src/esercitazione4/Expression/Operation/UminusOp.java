@@ -1,6 +1,7 @@
 package esercitazione4.Expression.Operation;
 
 import esercitazione4.Expression.Expr;
+import esercitazione4.visitor.Visitor;
 
 public class UminusOp extends Expr {
 
@@ -18,5 +19,7 @@ public class UminusOp extends Expr {
         this.expr = expr;
     }
 
-
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
 }

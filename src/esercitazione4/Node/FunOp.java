@@ -1,6 +1,7 @@
 package esercitazione4.Node;
 
 import esercitazione4.Expression.IdOp;
+import esercitazione4.visitor.Visitor;
 
 import java.util.LinkedList;
 
@@ -50,5 +51,10 @@ public class FunOp {
     public void setBody(BodyOp body) {
         this.body = body;
     }
+
+    public Object accept(Visitor v) throws Exception {
+        return v.visit(this);
+    }
+
 
 }

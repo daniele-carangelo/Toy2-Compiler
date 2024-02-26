@@ -2,7 +2,7 @@
   <configuration default="false" name="TesterES4" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="esercitazione4.Tester" />
     <module name="Imparato-Carangelo_es4" />
-    <option name="PROGRAM_PARAMETERS" value="test1" />
+    <option name="PROGRAM_PARAMETERS" value="test3" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

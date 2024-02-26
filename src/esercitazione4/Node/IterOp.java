@@ -1,5 +1,7 @@
 package esercitazione4.Node;
 
+import esercitazione4.visitor.Visitor;
+
 import java.util.LinkedList;
 
 public class IterOp {
@@ -43,4 +45,9 @@ public class IterOp {
     public void setProcedures(LinkedList<ProcedureOp> procedures) {
         this.procedures = procedures;
     }
+
+    public Object accept(Visitor v) throws Exception {
+        return v.visit(this);
+    }
+
 }

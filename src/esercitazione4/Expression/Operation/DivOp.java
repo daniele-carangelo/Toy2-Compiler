@@ -1,6 +1,7 @@
 package esercitazione4.Expression.Operation;
 
 import esercitazione4.Expression.Expr;
+import esercitazione4.visitor.Visitor;
 
 public class DivOp extends Expr {
 
@@ -25,5 +26,9 @@ public class DivOp extends Expr {
 
     public void setExpr2(Expr expr2) {
         this.expr2 = expr2;
+    }
+
+    public Object accept(Visitor v){
+        return v.visit(this);
     }
 }

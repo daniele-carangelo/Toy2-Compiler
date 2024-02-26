@@ -1,5 +1,7 @@
 package esercitazione4.Expression;
 
+import esercitazione4.visitor.Visitor;
+
 import java.util.LinkedList;
 
 public class FunCallOp extends Expr{
@@ -27,6 +29,10 @@ public class FunCallOp extends Expr{
     public void setExprs(LinkedList<Expr> exprs) {
         this.exprs = exprs;
     }
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 
 
 }

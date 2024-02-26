@@ -2,6 +2,7 @@ package esercitazione4.Statement;
 
 import esercitazione4.Expression.Expr;
 import esercitazione4.Node.BodyOp;
+import esercitazione4.visitor.Visitor;
 
 public class ElifOp extends Statement{
 
@@ -28,4 +29,9 @@ public class ElifOp extends Statement{
     public void setBody(BodyOp body) {
         this.body = body;
     }
+
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 }

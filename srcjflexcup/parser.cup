@@ -100,7 +100,7 @@ Iter1 ::= VarDecl:var Iter1:iter
 
       | Function:func Iter1:iter
                     {: LinkedList<FunOp>  function = iter.getFunctions();
-                        function.addFirst(func);
+                        function.add(func);
                         RESULT = iter;:}
 
       | /* empty */ {: LinkedList<VarDeclOp> varDecl = new LinkedList<>();
@@ -116,12 +116,12 @@ Iter2 ::= VarDecl:var Iter2:iter
 
       | Function:func Iter2:iter
             {: LinkedList<FunOp>  function = iter.getFunctions();
-               function.addFirst(func);
+               function.add(func);
                RESULT = iter;:}
 
       | Procedure:procedure Iter2:iter
             {: LinkedList<ProcedureOp> proc = iter.getProcedures();
-               proc.addFirst(procedure);
+               proc.add(procedure);
                RESULT = iter;:}
       | /* empty */ {: LinkedList<VarDeclOp> varDecl = new LinkedList<>();
                        LinkedList<FunOp> func = new LinkedList<>();
@@ -135,37 +135,37 @@ VarDecl ::= VAR Decls:decList {: RESULT = decList; :} ;
 /*---------------------------------------------------------------------------------*/
 
 Decls ::= Ids:idList COLON Type:type SEMI Decls:decList
-            {: decList.addFirst(new VarDeclOp(idList,type));
+            {: decList.add(new VarDeclOp(idList,type));
             	        RESULT = decList;:}
 	| Ids:idList ASSIGN Consts:constList SEMI Decls:decList
-	    {: decList.addFirst(new VarDeclOp(idList,constList));
+	    {: decList.add(new VarDeclOp(idList,constList));
 	        RESULT = decList;:}
 	| Ids:idList COLON Type:type SEMI ENDVAR
 	    {: LinkedList<VarDeclOp> decList = new LinkedList<> ();
-	        decList.addFirst(new VarDeclOp(idList,type));
+	        decList.add(new VarDeclOp(idList,type));
 	        RESULT = decList; :}
 	| Ids:idList ASSIGN Consts:constList SEMI ENDVAR
 	     {: LinkedList<VarDeclOp> decList = new LinkedList<> ();
-            decList.addFirst(new VarDeclOp(idList,constList));
+            decList.add(new VarDeclOp(idList,constList));
             RESULT = decList; :} ;
 
 /*---------------------------------------------------------------------------------*/
 
 Ids ::= ID:id COMMA Ids:idList
-                {: idList.addFirst(new IdOp(id));
+                {: idList.add(new IdOp(id));
                     RESULT = idList; :}
 
         | ID:id {: LinkedList<IdOp> idList = new LinkedList<>();
-                idList.addFirst(new IdOp(id));
+                idList.add(new IdOp(id));
                 RESULT = idList; :};
 
 /*---------------------------------------------------------------------------------*/
 
 Consts ::= Const:expr COMMA Consts:constList
-                  {: constList.addFirst(expr);
+                  {: constList.add(expr);
                      RESULT = constList; :}
 	| Const:expr {:  LinkedList<Expr> constList = new LinkedList<>();
-	                 constList.addFirst(expr);
+	                 constList.add(expr);
 	                 RESULT = constList; :} ;
 
 /*---------------------------------------------------------------------------------*/
@@ -191,25 +191,25 @@ Function  ::= FUNCTION ID:id LPAR FuncParams:params RPAR TYPERETURN Types:type C
 /*---------------------------------------------------------------------------------*/
 
 FuncParams ::= ID:id COLON Type:type OtherFuncParams:otherParams
-               {: otherParams.addFirst(new FuncParamsOp(new IdOp(id), type));
+               {: otherParams.add(new FuncParamsOp(new IdOp(id), type));
                   RESULT = otherParams; :}
 	    | /* empty */  {: RESULT = new LinkedList<FuncParamsOp>(); :} ;
 
 /*---------------------------------------------------------------------------------*/
 
 OtherFuncParams ::= COMMA ID:id COLON Type:type OtherFuncParams:otherParams
-                      {: otherParams.addFirst(new FuncParamsOp(new IdOp(id), type));
+                      {: otherParams.add(new FuncParamsOp(new IdOp(id), type));
                          RESULT = otherParams;  :}
 	    | /* empty */ {:  RESULT = new LinkedList<FuncParamsOp>(); :};
 
 /*---------------------------------------------------------------------------------*/
 
 Types ::= Type:type COMMA Types:typeList
-                {: typeList.addFirst(type);
+                {: typeList.add(type);
                     RESULT = typeList;  :}
 
 	| Type:type {: LinkedList<TypeOp> typeList = new LinkedList<>();
-	               typeList.addFirst(type);
+	               typeList.add(type);
 	               RESULT = typeList;  :} ;
 
 /*---------------------------------------------------------------------------------*/
@@ -220,14 +220,14 @@ Procedure ::= PROCEDURE ID:id LPAR ProcParams:params RPAR COLON Body:body ENDPRO
 /*---------------------------------------------------------------------------------*/
 
 ProcParams::= ProcParamId:paramId COLON Type:type OtherProcParams:paramList
-              {: paramList.addFirst(new ProcParamsOp(paramId, type));
+              {: paramList.add(new ProcParamsOp(paramId, type));
                  RESULT = paramList;  :}
 	   | /* empty */ {:RESULT = new LinkedList<ProcParamsOp>(); :} ;
 
 /*---------------------------------------------------------------------------------*/
 
 OtherProcParams ::= COMMA ProcParamId:paramId COLON Type:type OtherProcParams:paramList
-                     {: paramList.addFirst(new ProcParamsOp(paramId, type));
+                     {: paramList.add(new ProcParamsOp(paramId, type));
                         RESULT = paramList;  :}
 
 	   | /* empty */ {: RESULT = new LinkedList<ProcParamsOp>(); :};
@@ -241,7 +241,7 @@ ProcParamId ::= ID:id {: RESULT = new ProcParamIdOp(new IdOp(id), false); :}
 
 Body ::= VarDecl:varDecl Body:body  {: body.getVarDecl().addAll(varDecl);
                                        RESULT = body;  :}
-	| Stat:stat Body:body {: body.getStmt().addFirst(stat);
+	| Stat:stat Body:body {: body.getStmt().add(stat);
 	                         RESULT = body;:}
 
 	| /* empty */ {: LinkedList<VarDeclOp> varDecl = new LinkedList<> ();
@@ -294,7 +294,7 @@ IfStat ::= IF Expr:expr THEN Body:body Elifs:elifs Else:elseOp ENDIF
 
 Elifs ::= Elif:elif Elifs:elifs     {:  if(elifs == null){
                                             elifs = new LinkedList<ElifOp>();}
-                                        elifs.addFirst(elif);
+                                        elifs.add(elif);
                                         RESULT = elifs;  :}
 
       | /* empty */     {: RESULT = null; :}	   ;
@@ -313,46 +313,48 @@ Else ::= ELSE Body:body  {: RESULT = body; :}
 WhileStat ::= WHILE Expr:expr DO Body:body ENDWHILE {: RESULT = new WhileStatOp(expr, body); :} ;
 
 /*---------------------------------------------------------------------------------*/
-
-IOArgs ::= Expr:expr                                              //ammette una sola stringa oppure una concatenazione
+//In exp aggiungere un campo type( se exp normale oppure dollarsign)
+IOArgs ::= Expr:expr
             {: LinkedList<Expr> exprList = new LinkedList<>();
-               exprList.addFirst(expr);
+               exprList.add(expr);
                RESULT = exprList; :}
-          | Expr:expr1 DOLLARSIGN LPAR Expr:expr2 RPAR IOArgs:list             //ammette una stringa (o concatenazione), un passaggio di parametri ed eventuali altri passaggi e/o stringhe
-            {: list.addFirst(expr1);
-               list.addFirst(expr2);
+          | Expr:expr1 DOLLARSIGN LPAR Expr:expr2 RPAR IOArgs:list
+            {: expr2.setDollar(true);
+               list.add(expr1);
+               list.add(expr2);
                RESULT = list; :}
-          | DOLLARSIGN LPAR Expr:expr RPAR IOArgs:list                  //ammette un passaggio di parametri ed eventuali altri passaggi e/o stringhe
-            {: list.addFirst(expr);
+          | DOLLARSIGN LPAR Expr:expr RPAR IOArgs:list
+            {: expr.setDollar(true);
+               list.add(expr);
                RESULT = list;:}
-          | /* empty */  {: RESULT = new LinkedList<Expr>(); :} ;                                   //serve per terminare le ricorsioni
+          | /* empty */  {: RESULT = new LinkedList<Expr>(); :} ;
 
 /*---------------------------------------------------------------------------------*/
 
-ProcExprs::= Expr:expr COMMA ProcExprs:procExprs    {: procExprs.getExprs().addFirst(expr);
+ProcExprs::= Expr:expr COMMA ProcExprs:procExprs    {: procExprs.getExprs().add(expr);
                                                        RESULT = procExprs; :}
 
-	  | REF ID:id COMMA ProcExprs:procExprs  {: procExprs.getRefId().addFirst(new IdOp(id));
+	  | REF ID:id COMMA ProcExprs:procExprs  {: procExprs.getRefId().add(new IdOp(id));
 	                                            RESULT = procExprs; :}
 
       | Expr:expr  {: LinkedList<Expr> exprs = new LinkedList<>();
-                      exprs.addFirst(expr);
+                      exprs.add(expr);
                       RESULT = new ProcExprsOp(exprs, new LinkedList<>());:}
 
 	  | REF ID:id  {: LinkedList<IdOp> refIds = new LinkedList<>();
-	                  refIds.addFirst(new IdOp(id));
+	                  refIds.add(new IdOp(id));
 	                  RESULT = new ProcExprsOp(new LinkedList<>() ,refIds); :}    ;
 
 /*---------------------------------------------------------------------------------*/
 
-Exprs ::= Expr:expr COMMA Exprs:exprs  {: exprs.addFirst(expr);
+Exprs ::= Expr:expr COMMA Exprs:exprs  {: exprs.add(expr);
                                           RESULT = exprs; :}
 	| Expr:expr {: LinkedList<Expr> exprList = new LinkedList<>();
-                   exprList.addFirst(expr);
+                   exprList.add(expr);
                    RESULT = exprList;  :}  ;
 
 /*---------------------------------------------------------------------------------*/
-Expr ::= FunCall
+Expr ::= FunCall:funcall         {: RESULT = funcall; :}
 	| REAL_CONST:realConst       {: RESULT = new  RealOp(realConst); :}
     | INTEGER_CONST:intConst     {: RESULT = new IntegerOp(intConst); :}
 	| STRING_CONST:stringConst    {: RESULT = new StringOp(stringConst); :}

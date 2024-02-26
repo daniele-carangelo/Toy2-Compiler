@@ -1,6 +1,7 @@
 package esercitazione4.Node;
 
 import esercitazione4.Expression.IdOp;
+import esercitazione4.visitor.Visitor;
 
 public class ProcParamIdOp {
 
@@ -27,4 +28,8 @@ public class ProcParamIdOp {
     public void setOut(Boolean out) {
         this.out = out;
     }
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 }

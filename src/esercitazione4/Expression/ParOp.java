@@ -1,5 +1,7 @@
 package esercitazione4.Expression;
 
+import esercitazione4.visitor.Visitor;
+
 public class ParOp extends Expr{
 
     private Expr expr;
@@ -14,5 +16,9 @@ public class ParOp extends Expr{
 
     public void setExpr(Expr expr) {
         this.expr = expr;
+    }
+
+    public Object accept(Visitor v){
+        return v.visit(this);
     }
 }

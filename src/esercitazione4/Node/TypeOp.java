@@ -1,5 +1,7 @@
 package esercitazione4.Node;
 
+import esercitazione4.visitor.Visitor;
+
 public class TypeOp {
 
     private String type;
@@ -15,6 +17,8 @@ public class TypeOp {
     public void setType(String type) {
         this.type = type;
     }
-
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
 
 }

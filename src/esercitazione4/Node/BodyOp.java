@@ -1,6 +1,7 @@
 package esercitazione4.Node;
 
 import esercitazione4.Statement.Statement;
+import esercitazione4.visitor.Visitor;
 
 import java.util.LinkedList;
 
@@ -32,5 +33,8 @@ public class BodyOp {
         this.stmt = stmt;
     }
 
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
 
 }

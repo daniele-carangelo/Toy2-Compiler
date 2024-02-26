@@ -1,6 +1,7 @@
 package esercitazione4.Node;
 
 import esercitazione4.Expression.IdOp;
+import esercitazione4.visitor.Visitor;
 
 import java.util.LinkedList;
 
@@ -32,6 +33,10 @@ public class FuncParamsOp {
     public void setType(TypeOp type) {
         this.type = type;
     }
+    public Object accept(Visitor v){
+        return v.visit(this);
+    }
+
 
 
 }
