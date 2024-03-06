@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="TesterES4" type="Application" factoryName="Application">
+  <configuration default="false" name="TesterES5" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="esercitazione5.Tester" />
-    <module name="Imparato-Carangelo_es4" />
+    <module name="Imparato-Carangelo_es5" />
     <option name="PROGRAM_PARAMETERS" value="test3" />
     <method v="2">
       <option name="Make" enabled="true" />

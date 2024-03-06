@@ -1,6 +1,7 @@
 package esercitazione5.Node;
 
 import esercitazione5.Expression.IdOp;
+import esercitazione5.SymbolTable.SymbolTable;
 import esercitazione5.visitor.Visitor;
 
 import java.util.LinkedList;
@@ -12,6 +13,8 @@ public class FunOp {
     private LinkedList<FuncParamsOp> funcParams;
     private LinkedList<TypeOp> types;
     private BodyOp body;
+
+    private SymbolTable symbolTable;
 
     public FunOp(IdOp id, LinkedList<FuncParamsOp> funcParams, LinkedList<TypeOp> types, BodyOp body){
         this.id = id;
@@ -52,9 +55,18 @@ public class FunOp {
         this.body = body;
     }
 
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
+
+    public void setSymbolTable(SymbolTable symbolTable) {
+        this.symbolTable = symbolTable;
+    }
+
     public Object accept(Visitor v) throws Exception {
         return v.visit(this);
     }
+
 
 
 }

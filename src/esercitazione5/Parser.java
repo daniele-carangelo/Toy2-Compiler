@@ -13,6 +13,7 @@ import esercitazione5.Expression.ConstOP.*;
 import esercitazione5.Expression.Operation.*;
 import esercitazione5.Expression.RelOp.*;
 import java.util.LinkedList;
+import java_cup.runtime.XMLElement;
 
 /** CUP v0.11b 20160615 (GIT 4ac7450) generated parser.
   */

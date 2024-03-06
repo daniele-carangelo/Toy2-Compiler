@@ -9,6 +9,7 @@ public class IntegerOp extends Expr {
 
     public IntegerOp(int attribute){
         this.attribute = attribute;
+        super.type = "int";
     }
 
     public int getAttribute() {

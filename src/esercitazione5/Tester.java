@@ -1,6 +1,7 @@
 package esercitazione5;
 
 import esercitazione5.Node.ProgramOp;
+import esercitazione5.visitor.ScopeVisitor;
 import esercitazione5.visitor.XmlGenerator;
 import org.w3c.dom.Document;
 
@@ -30,6 +31,9 @@ public class Tester {
            // parser.parse();
 
             ProgramOp program =  (ProgramOp) parser.parse().value;
+
+            ScopeVisitor scopeVisitor = new ScopeVisitor();
+            program.accept(scopeVisitor);
 
             XmlGenerator xml = new XmlGenerator();
             Document doc = (Document) program.accept(xml);

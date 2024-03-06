@@ -9,6 +9,7 @@ public class StringOp extends Expr {
 
     public StringOp(String attribute){
         this.attribute = attribute;
+        super.type = "string";
     }
 
     public String getAttribute() {

@@ -6,7 +6,7 @@ import esercitazione5.visitor.Visitor;
 public class FalseOp extends Expr {
 
     public FalseOp(){
-
+        super.type = "Boolean";
     }
 
     public Object accept(Visitor v){

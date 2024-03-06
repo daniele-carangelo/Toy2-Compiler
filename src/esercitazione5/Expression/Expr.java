@@ -5,6 +5,7 @@ import esercitazione5.visitor.Visitor;
 public abstract class Expr {
 
     private Boolean dollar;
+    public String type;
 
     public Boolean getDollar() {
         return dollar;

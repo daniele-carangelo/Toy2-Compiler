@@ -1,22 +1,30 @@
 package esercitazione5.Node;
 
+import esercitazione5.SymbolTable.SymbolTable;
 import esercitazione5.visitor.Visitor;
 
 import java.util.LinkedList;
 
-public class ProgramOp {
+public class ProgramOp  {
 
     private LinkedList<VarDeclOp> varDecls;
     private LinkedList<FunOp> functions;
     private LinkedList<ProcedureOp> procedures;
 
-    public ProgramOp(LinkedList<VarDeclOp> varDecls, LinkedList<FunOp> functions, LinkedList<ProcedureOp> procedures){
-        if(procedures.isEmpty())
-            throw new RuntimeException("Il programma deve avere almeno una procedura.");
+    private SymbolTable symbolTable;
 
+    public ProgramOp(LinkedList<VarDeclOp> varDecls, LinkedList<FunOp> functions, LinkedList<ProcedureOp> procedures){
         this.functions = functions;
         this.procedures = procedures;
         this.varDecls = varDecls;
+    }
+
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
+
+    public void setSymbolTable(SymbolTable symbolTable) {
+        this.symbolTable = symbolTable;
     }
 
     public LinkedList<VarDeclOp> getVarDecls() {

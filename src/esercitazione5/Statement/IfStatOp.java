@@ -2,6 +2,7 @@ package esercitazione5.Statement;
 
 import esercitazione5.Expression.Expr;
 import esercitazione5.Node.BodyOp;
+import esercitazione5.SymbolTable.SymbolTable;
 import esercitazione5.visitor.Visitor;
 
 import java.util.LinkedList;
@@ -12,6 +13,10 @@ public class IfStatOp extends Statement{
     private BodyOp body;
     private LinkedList<ElifOp> elifS;
     private BodyOp elseBody;
+
+    private SymbolTable symbolTable;
+
+    private SymbolTable elseTable;
 
     public IfStatOp(Expr expr, BodyOp body){
         this.expr = expr;
@@ -70,6 +75,22 @@ public class IfStatOp extends Statement{
 
     public void setElseBody(BodyOp elseBody) {
         this.elseBody = elseBody;
+    }
+
+    public SymbolTable getSymbolTable() {
+        return symbolTable;
+    }
+
+    public void setSymbolTable(SymbolTable symbolTable) {
+        this.symbolTable = symbolTable;
+    }
+
+    public SymbolTable getElseTable() {
+        return elseTable;
+    }
+
+    public void setElseTable(SymbolTable elseTable) {
+        this.elseTable = elseTable;
     }
 
     public Object accept(Visitor v){

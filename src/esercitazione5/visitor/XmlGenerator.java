@@ -589,11 +589,6 @@ public class XmlGenerator implements Visitor{
             writeOpElement.appendChild((Element) expr.accept(this));
         }
 
-
-
-
         return writeOpElement;
     }
-
-
 }

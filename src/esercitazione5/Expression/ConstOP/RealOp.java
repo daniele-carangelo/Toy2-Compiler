@@ -9,6 +9,7 @@ public class RealOp extends Expr {
 
     public RealOp(float attribute){
         this.attribute = attribute;
+        super.type = "float";
     }
 
     public float getAttribute() {
