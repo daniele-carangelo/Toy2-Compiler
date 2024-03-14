@@ -2,6 +2,7 @@ package esercitazione5;
 
 import esercitazione5.Node.ProgramOp;
 import esercitazione5.visitor.ScopeVisitor;
+import esercitazione5.visitor.TypeVisitor;
 import esercitazione5.visitor.XmlGenerator;
 import org.w3c.dom.Document;
 
@@ -34,6 +35,9 @@ public class Tester {
 
             ScopeVisitor scopeVisitor = new ScopeVisitor();
             program.accept(scopeVisitor);
+
+            TypeVisitor typeVisitor = new TypeVisitor();
+            program.accept(typeVisitor);
 
             XmlGenerator xml = new XmlGenerator();
             Document doc = (Document) program.accept(xml);

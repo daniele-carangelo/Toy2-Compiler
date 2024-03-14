@@ -250,7 +250,7 @@ public class ScopeVisitor implements Visitor{
 
         if(!varDeclOp.getConstant().isEmpty()){ //sono nel caso dell'ASSIGN
             if(varDeclOp.getConstant().size() != varDeclOp.getIds().size())
-                throw new RuntimeException("Il numero degli Id non corrisponde al numero delle costanti.");
+                throw new RuntimeException("Nella dichiarazione il numero degli Id non corrisponde al numero delle costanti.");
             else{
                 while (idIterator.hasNext() && constIterator.hasNext()) {
                      SymbolRecord record= new SymbolRecord(idIterator.next().getName(), "var",

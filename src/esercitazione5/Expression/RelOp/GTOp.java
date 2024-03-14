@@ -10,6 +10,7 @@ public class GTOp extends Expr {
     public GTOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "gt";
     }
 
     public Expr getExpr1() {

@@ -10,6 +10,7 @@ public class DiffOp extends Expr {
     public DiffOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "diff";
     }
 
     public Expr getExpr1() {

@@ -9,6 +9,7 @@ public class UminusOp extends Expr {
 
     public UminusOp(Expr expr){
         this.expr = expr;
+        super.type = "uminus";
     }
 
     public Expr getExpr() {

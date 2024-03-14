@@ -10,6 +10,7 @@ public class LEOp extends Expr {
     public LEOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type= "le";
     }
 
     public Expr getExpr1() {

@@ -9,6 +9,7 @@ public class NotOp extends Expr {
 
     public NotOp(Expr expr){
         this.expr = expr;
+        super.type = "not";
     }
 
     public Expr getExpr() {

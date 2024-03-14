@@ -52,11 +52,40 @@ endproc
 % stampa il messaggio dopo 4 ritorni a capo %
 func stampa(messaggio: string)-> string:
     var i ^= 0;\
-    while i < 4 do
+    while i > 4 do
+	-->! ;
+	i ^= i +1;
+	return "ciao";
+    endwhile;
+
+
+    if i < 100 then
+        return "11";
+      if i < 100 then
+         return "i";
+         if i> 100 then
+        return "1";
+     elseif i > 100 then
+     i ^= 0;
+     return "1";
+     else
+
+    endif;
+    endif;
+    endif;
+
+     --> $(messaggio);
+
+endfunc
+
+func stampa2(messaggio: string)-> string:
+    var i ^= 0;\
+    i ^= messaggio;
+    while i > 4 do
 	-->! ;
 	i ^= i +1;
     endwhile;
 
      --> $(messaggio);
-    return "ok";
+    return "i";
 endfunc

@@ -10,6 +10,7 @@ public class NEOp extends Expr {
     public NEOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "ne";
     }
 
 

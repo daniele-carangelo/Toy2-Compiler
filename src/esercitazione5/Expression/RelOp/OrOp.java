@@ -10,6 +10,7 @@ public class OrOp extends Expr {
     public OrOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "or";
     }
 
     public Expr getExpr1() {

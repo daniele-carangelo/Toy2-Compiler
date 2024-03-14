@@ -25,4 +25,10 @@ public class ReturnStatOp extends Statement{
         return v.visit(this);
     }
 
+    @Override
+    public String toString() {
+        return "ReturnStatOp{" +
+                "exprs=" + exprs +
+                '}';
+    }
 }

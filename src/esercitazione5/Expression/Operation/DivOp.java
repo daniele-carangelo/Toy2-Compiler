@@ -10,6 +10,7 @@ public class DivOp extends Expr {
     public DivOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "div";
     }
 
     public Expr getExpr1() {

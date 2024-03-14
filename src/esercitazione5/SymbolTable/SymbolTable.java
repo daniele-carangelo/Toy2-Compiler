@@ -1,5 +1,7 @@
 package esercitazione5.SymbolTable;
 
+import esercitazione5.Expression.IdOp;
+
 import javax.swing.text.html.Option;
 import java.util.LinkedList;
 import java.util.Optional;
@@ -15,6 +17,9 @@ public class SymbolTable {
         this.symbolRecords = new LinkedList<SymbolRecord>();
     }
 
+
+
+    //cerca l'id in tutte le symbolTable
     public Optional<SymbolRecord> lookup(String symbol) {
         SymbolTable temp = this;
         Optional<SymbolRecord> symTemp = Optional.ofNullable(null);
@@ -39,6 +44,16 @@ public class SymbolTable {
             throw new RuntimeException("L'elemento: " + symbolRecord.getSymbol() + " è stato già dichiarato");
         else
             this.symbolRecords.add(symbolRecord);
+    }
+
+    public SymbolType typeOfId(IdOp idOp) {
+
+        Optional<SymbolRecord> symbolRowOptional = this.getSymbolRecords().stream().filter(symbolRecord -> symbolRecord.getSymbol().equals(idOp.getName())).findFirst();
+        if (symbolRowOptional.isPresent())
+            return symbolRowOptional.get().getSymbolType();
+        else if (this.father != null)
+            return this.father.typeOfId(idOp);
+        throw new RuntimeException("L'id " + idOp.getName() + " non è stato dichiarato");
     }
 
     public LinkedList<SymbolRecord> getSymbolRecords() {

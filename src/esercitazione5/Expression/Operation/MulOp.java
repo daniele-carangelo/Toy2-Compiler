@@ -10,6 +10,7 @@ public class MulOp extends Expr {
     public MulOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "mul";
     }
 
     public Expr getExpr1() {

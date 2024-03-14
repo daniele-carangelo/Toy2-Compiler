@@ -9,6 +9,7 @@ public class AddOp extends Expr {
     public AddOp(Expr expr1, Expr expr2) {
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "add";
     }
 
     public Expr getExpr1() {

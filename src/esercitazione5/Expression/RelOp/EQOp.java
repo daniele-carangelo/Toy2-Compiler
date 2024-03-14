@@ -10,6 +10,7 @@ public class EQOp extends Expr {
     public EQOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "eq";
     }
 
     public Expr getExpr1() {

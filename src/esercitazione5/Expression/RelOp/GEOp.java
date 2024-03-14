@@ -10,6 +10,7 @@ public class GEOp extends Expr {
     public GEOp(Expr expr1, Expr expr2){
         this.expr1 = expr1;
         this.expr2 = expr2;
+        super.type = "ge";
     }
 
     public Expr getExpr1() {
