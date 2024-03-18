@@ -23,7 +23,7 @@ public class Tester {
             System.exit(1);
         }
 
-        String filePath = "test_files" + File.separator + args[0];
+        String filePath = "Test" + File.separator + args[0];
 
         try {
             Reader reader = new FileReader(filePath);
@@ -39,6 +39,7 @@ public class Tester {
             TypeVisitor typeVisitor = new TypeVisitor();
             program.accept(typeVisitor);
 
+            /*
             XmlGenerator xml = new XmlGenerator();
             Document doc = (Document) program.accept(xml);
 
@@ -49,7 +50,7 @@ public class Tester {
             StreamResult streamResult = new StreamResult(new File(System.getProperty("user.dir")+"\\albero_sintattico.xml"));
             transformer.transform(domSource, streamResult);
             System.out.println("Il File XML è stato generato correttamente.");
-
+*/
 
 
 

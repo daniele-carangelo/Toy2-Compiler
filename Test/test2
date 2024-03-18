@@ -1,17 +1,9 @@
 proc sommac(a: integer, d: integer, b:real, out size: string, out result: real):
 
 	result  ^=  a + b + c + d;
-
-	if result > 100 then
-		var valore ^= "grande";\
- 		size ^= valore;
-	elseif result > 50 then
-		var valore ^= "media";\
- 		size ^= valore;
-	else
-		var valore ^= "piccola";\
- 		size ^= valore;
-	endif;
+	var main ^= 2;\
+    main ^= 3;
+    size ^= "ccc";
 
 endproc
 
@@ -27,27 +19,33 @@ proc main():
 	ans ^= "no";
 	risultato ^= 0.0;\
 
-	sommac(a, x, b, @taglia, @risultato);
+
+
+	sommac(a ,x, b, @taglia,@ risultato);
 
 	var valore ^= "nok";\
 
 	valore ^= stampa("la somma di " + a + " e " + b +  " incrementata di "  + c +  " e' " + taglia);
-	valore ^= stampa();
+	valore ^= stampa("");
 
-	<-- "vuoi continuare? (si/no) - inserisci due volte la risposta\n" $(ans) $(ans1) ;
+	%<-- "vuoi continuare? (si/no) - inserisci due volte la risposta\n" $(ans) $(ans1) ;%
 	while ans = "si" do
-	    <-- "inserisci un intero:" $(a);
-	    <-- "inserisci un reale:" $(b);
-	    sommac(a, x, b, @taglia, @risultato);
+	    %<-- "inserisci un intero:" $(a);%
+	    %<-- "inserisci un reale:" $(b);%
+	    %sommac(a, x, b, @taglia, @risultato);%
 	    valore ^= stampa("la somma di " + a + " e " + b +  " incrementata di " + c + " e' " + taglia);
 	    valore ^= stampa(" ed e' pari a " + risultato);
-	    <-- "vuoi continuare? (si/no):\t" $(ans);
+	    %<-- "vuoi continuare? (si/no):\t" $(ans);%
    endwhile;
 
         -->! ;
         --> "ciao";
 endproc
 
+func stampa3()-> integer:
+
+    return 1;
+endfunc
 
 % stampa il messaggio dopo 4 ritorni a capo %
 func stampa(messaggio: string)-> string:
@@ -58,8 +56,10 @@ func stampa(messaggio: string)-> string:
 	return "ciao";
     endwhile;
 
+    var x ^= "true";\
 
-    if i < 100 then
+    x ^=  stampa2(messaggio);
+    if true then
         return "11";
       if i < 100 then
          return "i";
@@ -74,13 +74,15 @@ func stampa(messaggio: string)-> string:
     endif;
     endif;
 
+
+
      --> $(messaggio);
 
 endfunc
 
 func stampa2(messaggio: string)-> string:
     var i ^= 0;\
-    i ^= messaggio;
+    i ^= 1;
     while i > 4 do
 	-->! ;
 	i ^= i +1;

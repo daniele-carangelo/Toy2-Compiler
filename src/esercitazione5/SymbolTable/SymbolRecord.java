@@ -3,7 +3,7 @@ package esercitazione5.SymbolTable;
 public class SymbolRecord {
     private String symbol;
     private String kind;
-    private Boolean properties;
+    private Boolean properties = false;
     private SymbolType symbolType;
 
     public SymbolRecord(String symbol, String kind, SymbolType symbolType){
@@ -36,6 +36,14 @@ public class SymbolRecord {
 
     public SymbolType getSymbolType() {
         return symbolType;
+    }
+
+    public Boolean getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Boolean properties) {
+        this.properties = properties;
     }
 
     public void setSymbolType(SymbolType symbolType) {

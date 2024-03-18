@@ -1,6 +1,7 @@
 package esercitazione5.Node;
 
 import esercitazione5.Statement.Statement;
+import esercitazione5.SymbolTable.SymbolTable;
 import esercitazione5.visitor.Visitor;
 
 import java.util.LinkedList;

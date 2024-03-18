@@ -22,7 +22,7 @@ public class IfStatOp extends Statement{
         this.expr = expr;
         this.body = body;
         this.elseBody = null;
-        this.elifS = null;
+        this.elifS = new LinkedList<ElifOp>();
     }
 
     public IfStatOp(Expr expr, BodyOp body,LinkedList<ElifOp> elifS, BodyOp elseBody ){
@@ -36,7 +36,7 @@ public class IfStatOp extends Statement{
         this.expr = expr;
         this.body = body;
         this.elseBody = elseBody;
-        this.elifS = null;
+        this.elifS = new LinkedList<ElifOp>();
     }
     public IfStatOp(Expr expr, BodyOp body,LinkedList<ElifOp> elifS ){
         this.expr = expr;

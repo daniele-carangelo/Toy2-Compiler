@@ -175,8 +175,8 @@ public class ScopeVisitor implements Visitor{
     @Override
     public Object visit(BodyOp bodyOp) {
 
+
         if(!bodyOp.getVarDecl().isEmpty()){
-            LinkedList<SymbolRecord> varList;
             for(VarDeclOp varDeclOp : bodyOp.getVarDecl()){
                 varDeclOp.accept(this);
                 /*
@@ -184,7 +184,6 @@ public class ScopeVisitor implements Visitor{
                     table.addRecord(symbolRecord);
                 }*/
             }
-
         }
 
         if(!bodyOp.getStmt().isEmpty()){
@@ -215,7 +214,7 @@ public class ScopeVisitor implements Visitor{
             for (ProcedureOp procedureOp : programOp.getProcedures()){
                 LinkedList<TypeOp> procParam = procedureOp.getParams().stream().map(ProcParamsOp::getType).
                         collect(Collectors.toCollection(LinkedList::new));
-                SymbolRecord record = new SymbolRecord(procedureOp.getId().getName(), "procedure", new SymbolType(procParam,new LinkedList<>()));
+                SymbolRecord record = new SymbolRecord(procedureOp.getId().getName(), "procedure", new SymbolType(procParam,procedureOp.getParams(),1));
                 programOp.getSymbolTable().addRecord(record);
             }
         }
@@ -254,7 +253,7 @@ public class ScopeVisitor implements Visitor{
             else{
                 while (idIterator.hasNext() && constIterator.hasNext()) {
                      SymbolRecord record= new SymbolRecord(idIterator.next().getName(), "var",
-                            new SymbolType(new LinkedList<TypeOp>(List.of(new TypeOp(constIterator.next().type)))));
+                            new SymbolType(new LinkedList<TypeOp>(List.of(new TypeOp(constIterator.next().type)))),true);
                      table.addRecord(record);
                 }
             }
@@ -265,7 +264,7 @@ public class ScopeVisitor implements Visitor{
             while(idIterator.hasNext()) {
                 IdOp id = idIterator.next();
                 SymbolRecord record = new SymbolRecord(id.getName(), "var",
-                        new SymbolType(new LinkedList<TypeOp>(List.of(varDeclOp.getType()))));
+                        new SymbolType(new LinkedList<TypeOp>(List.of(varDeclOp.getType()))),true);
                 table.addRecord(record);
             }
         }
@@ -285,8 +284,8 @@ public class ScopeVisitor implements Visitor{
 
         if(!funOp.getFuncParams().isEmpty()){ //se ci sono parametri li aggiungo nella nuova tab
             for(FuncParamsOp funcParamsOp : funOp.getFuncParams()){
-                SymbolRecord record = new SymbolRecord(funcParamsOp.getId().getName(), "var",
-                        new SymbolType(new LinkedList<TypeOp>(List.of(funcParamsOp.getType()))));
+                SymbolRecord record = new SymbolRecord(funcParamsOp.getId().getName(), "func",
+                        new SymbolType(new LinkedList<TypeOp>(List.of(funcParamsOp.getType()))),false);
                 tableFunction.addRecord(record);
             }
         }
@@ -296,6 +295,7 @@ public class ScopeVisitor implements Visitor{
             funOp.getBody().accept(this);
             table = father;
         }
+        table = funOp.getSymbolTable().getFather();
 
         return null;
     }
@@ -321,10 +321,9 @@ public class ScopeVisitor implements Visitor{
         }
 
         if(procedureOp.getBody() != null){
-
             procedureOp.getBody().accept(this);
-
         }
+
         table = father;
 
         return null;
@@ -333,7 +332,7 @@ public class ScopeVisitor implements Visitor{
     @Override
     public Object visit(ProcParamsOp procParamsOp) {
 
-        Boolean type = (procParamsOp.getParamId().getOut()) ? false : true;
+        Boolean type = (procParamsOp.getParamId().getOut()) ? true : false;
         SymbolRecord record = new SymbolRecord(procParamsOp.getParamId().getId().getName(),
                 "var",new SymbolType(new LinkedList<TypeOp>(List.of(procParamsOp.getType()))), type);
         table.addRecord(record);
@@ -373,15 +372,12 @@ public class ScopeVisitor implements Visitor{
         SymbolTable ifTable = ifStatOp.getSymbolTable();
         ifTable.setScope("if-scope");
         ifTable.setFather(table);
-
         table = ifStatOp.getSymbolTable();
-
-        ifStatOp.getBody().accept(this);
         ifStatOp.getExpr().accept(this);
+        ifStatOp.getBody().accept(this);
+        table = ifStatOp.getSymbolTable().getFather();
 
-       table = ifStatOp.getSymbolTable().getFather();
-
-        if(ifStatOp.getElifS() != null){
+        if(!ifStatOp.getElifS().isEmpty()){
             for(ElifOp elifOp : ifStatOp.getElifS())
                 elifOp.accept(this);
         }
@@ -393,10 +389,8 @@ public class ScopeVisitor implements Visitor{
             elseTable.setFather(table);
             table = ifStatOp.getElseTable() ;
             ifStatOp.getElseBody().accept(this);
-            table = ifStatOp.getElseTable().getFather();
+            table = ifStatOp.getSymbolTable().getFather();
         }
-
-
 
         return null;
     }
@@ -410,10 +404,10 @@ public class ScopeVisitor implements Visitor{
         tableElif.setScope("elif-scope");
 
         table = elifOp.getSymbolTable();
-        if(elifOp.getBody() != null)
-            elifOp.getBody().accept(this);
         if(elifOp.getExpr() != null)
             elifOp.getExpr().accept(this);
+        if(elifOp.getBody() != null)
+            elifOp.getBody().accept(this);
 
         table = elifOp.getSymbolTable().getFather();
 
@@ -445,14 +439,16 @@ public class ScopeVisitor implements Visitor{
     @Override
     public Object visit(ProcCallOp procCallOp) {
         procCallOp.getId().accept(this);
-        procCallOp.getProcExprs().accept(this);
+        if(procCallOp.getProcExprs() != null)
+            procCallOp.getProcExprs().accept(this);
         return null;
     }
 
     @Override
     public Object visit(ProcExprsOp procExprsOp) {
+        //TODO qui solo exp.accept
         procExprsOp.getExprs().forEach(expr -> expr.accept(this));
-        procExprsOp.getRefId().forEach(idOp -> idOp.accept(this));
+        //procExprsOp.getRefId().forEach(idOp -> idOp.accept(this));
         return null;
     }
 

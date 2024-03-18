@@ -271,7 +271,8 @@ FunCall ::= ID:id LPAR Exprs:exprs RPAR
 ProcCall ::= ID:id LPAR ProcExprs:exprs RPAR
              {: RESULT = new ProcCallOp(new IdOp(id), exprs); :}                   /* chiamata con almeno un parametro */
          | ID:id LPAR RPAR
-             {: RESULT = new ProcCallOp(new IdOp(id),null); :}   ;  /* chiamata con nessun parametro */
+             {:
+             RESULT = new ProcCallOp(new IdOp(id), new ProcExprsOp(new LinkedList<Expr>()) ); :}   ;  /* chiamata con nessun parametro */
 
 /*---------------------------------------------------------------------------------*/
 
@@ -314,6 +315,7 @@ WhileStat ::= WHILE Expr:expr DO Body:body ENDWHILE {: RESULT = new WhileStatOp(
 
 /*---------------------------------------------------------------------------------*/
 //In exp aggiungere un campo type( se exp normale oppure dollarsign)
+
 IOArgs ::= Expr:expr
             {: LinkedList<Expr> exprList = new LinkedList<>();
                exprList.add(expr);
@@ -334,16 +336,20 @@ IOArgs ::= Expr:expr
 ProcExprs::= Expr:expr COMMA ProcExprs:procExprs    {: procExprs.getExprs().add(expr);
                                                        RESULT = procExprs; :}
 
-	  | REF ID:id COMMA ProcExprs:procExprs  {: procExprs.getRefId().add(new IdOp(id));
+	  | REF ID:id COMMA ProcExprs:procExprs  {: IdOp idNew = new IdOp(id);
+	                                            idNew.setRef(true);
+	                                            procExprs.getExprs().add(idNew);
 	                                            RESULT = procExprs; :}
 
       | Expr:expr  {: LinkedList<Expr> exprs = new LinkedList<>();
                       exprs.add(expr);
-                      RESULT = new ProcExprsOp(exprs, new LinkedList<>());:}
+                      RESULT = new ProcExprsOp(exprs); :}
 
-	  | REF ID:id  {: LinkedList<IdOp> refIds = new LinkedList<>();
-	                  refIds.add(new IdOp(id));
-	                  RESULT = new ProcExprsOp(new LinkedList<>() ,refIds); :}    ;
+	  | REF ID:id  {: LinkedList<Expr> refIds = new LinkedList<>();
+                      IdOp newID = new IdOp(id);
+                      newID.setRef(true);
+	                  refIds.add(newID);
+	                  RESULT = new ProcExprsOp(refIds); :}    ;
 
 /*---------------------------------------------------------------------------------*/
 

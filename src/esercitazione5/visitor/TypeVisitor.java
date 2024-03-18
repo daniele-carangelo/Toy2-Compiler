@@ -63,7 +63,7 @@ public class TypeVisitor implements Visitor{
             FunCallOp funcall = (FunCallOp) expr;
             returns = (LinkedList<TypeOp>) funcall.accept(this);
             if (returns.size() > 1) {
-                throw new RuntimeException("la chiamata a funzione restituisce più valori per l'operazione");
+                throw new RuntimeException("la chiamata a funzione " + funcall.getId().getName() + " restituisce più valori per l'operazione");
             }
             else
                 return returns.get(0).getType();
@@ -249,13 +249,15 @@ public class TypeVisitor implements Visitor{
     @Override
     public Object visit(FunCallOp funCallOp) {
         //prendo i tipi dei parametri nella firma della funzione
-        SymbolType typeFunc = (SymbolType) funCallOp.getId().accept(this);
+        //SymbolType typeFunc = (SymbolType) funCallOp.getId().accept(this);
+       Optional<SymbolRecord> typeRecord= symbolTable.lookup((String )funCallOp.getId().getName());
+       SymbolType typeFunc= typeRecord.get().getSymbolType();
+
         Iterator<TypeOp> typeOpIterator = typeFunc.getInputType().iterator();
-        System.out.println(funCallOp.getId());
         if(funCallOp.getExprs().size() > typeFunc.getInputType().size())
-            throw new RuntimeException("Il numero di parametri della chiamata alla funzione:"+ funCallOp.getId() +" è superiore ai parametri della firma");
+            throw new RuntimeException("Il numero di parametri della chiamata alla funzione:"+ funCallOp.getId().getName() +" è superiore ai parametri della firma");
         else if(funCallOp.getExprs().size() < typeFunc.getInputType().size())
-            throw new RuntimeException("Il numero di parametri della chiamata alla funzione:"+ funCallOp.getId() +" è inferiore ai parametri della firma");
+            throw new RuntimeException("Il numero di parametri della chiamata alla funzione:"+ funCallOp.getId().getName() +" è inferiore ai parametri della firma");
 
         for(Expr exprCall : funCallOp.getExprs()){
 
@@ -290,7 +292,8 @@ public class TypeVisitor implements Visitor{
 
     @Override
     public Object visit(ParOp parOp) {
-        return null;
+
+        return  (String) parOp.getExpr().accept(this);
     }
 
     @Override
@@ -471,29 +474,41 @@ public class TypeVisitor implements Visitor{
 
     @Override
     public Object visit(IterOp iterOp) throws Exception {
-        //TODO
+        //TODO null?
         return null;
     }
 
     @Override
     public Object visit(ProcedureOp procedureOp) {
         //TODO
+        symbolTable = procedureOp.getSymbolTable();
+        //check se ci sono return
+        LinkedList<ReturnStatOp> returnStmt = new LinkedList<>();
+        checkReturn(procedureOp.getBody(),returnStmt);
+
+        if(returnStmt.size() != 0)
+            throw new RuntimeException("Le Procedure non posso avere RETURN statement");
+
+        symbolTable = procedureOp.getSymbolTable();
+        procedureOp.getBody().accept(this);
+
         return null;
     }
 
     @Override
-    public Object visit(ProcParamsOp procParamsOp) {  //TODO
+    public Object visit(ProcParamsOp procParamsOp) {  //TODO null?
         return null;
     }
 
     @Override
-    public Object visit(ProcParamIdOp procParamIdOp) {  //TODO
+    public Object visit(ProcParamIdOp procParamIdOp) {  //TODO null?
         return null;
     }
 
 
     @Override
     public Object visit(ReturnStatOp returnStatOp) {
+        //TODO
         LinkedList<String> typeReturn = new LinkedList<>();
         returnStatOp.getExprs().forEach(expr -> typeReturn.add((String) expr.accept(this)));
         return typeReturn;
@@ -508,22 +523,77 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(VarDeclOp varDeclOp) { //TODO
+    public Object visit(VarDeclOp varDeclOp) {
+        //ckeck del numero delle costanti fatto in ScopeVisitor
         return null;
     }
 //-------------------------------------------------------------------
     @Override
     public Object visit(AssignStatOp assignStatOp) {  //TODO
+        String type;
+        Iterator<IdOp> ids = assignStatOp.getIds().iterator();
+        if(assignStatOp.getIds().size() != assignStatOp.getExprs().size())
+            throw new RuntimeException("Numero di ID nell'assegnazione diverso dal numero delle EXPR");
+
+        for(Expr expr : assignStatOp.getExprs()){
+            type = checkReturnFunCall(expr);
+            IdOp name = ids.next();
+            Optional<SymbolRecord> record1 = symbolTable.lookup(name.getName());
+            if(record1.get().getKind().equals("function") || record1.get().getKind().equals("procedure"))
+                throw new RuntimeException("Impossibile assegnare ad una funziona o procedura");
+
+            String typeId = (String) name.accept(this);
+            Optional<SymbolRecord> record = symbolTable.lookup(name.getName());
+            if(record.isPresent())
+                if(!record.get().getProperties())
+                    throw new RuntimeException("L'ID: "+ name.getName() + " non può essere assegnato");
+
+            if(!type.equalsIgnoreCase(typeId))
+                if(!(typeId.equalsIgnoreCase("float") && type.equalsIgnoreCase("int")))
+                    throw new RuntimeException("Il type di: "+ name.getName() + " non corrisponde con il tipo dell'espressione associata");
+
+
+        }
+
         return null;
     }
 
     @Override
-    public Object visit(ElifOp elifOp) { //TODO
+    public Object visit(ElifOp elifOp) { //TODO test
+
+        String type = (String )elifOp.getExpr().accept(this);
+        if(!type.equalsIgnoreCase("boolean"))
+            throw new RuntimeException("La condizione dell'ElseIF non è di tipo Booleano");
+
+        if(elifOp.getBody() != null) {
+            symbolTable = elifOp.getSymbolTable();
+            elifOp.getBody().accept(this);
+            symbolTable = elifOp.getSymbolTable().getFather();
+        }
         return null;
     }
 
     @Override
-    public Object visit(IfStatOp ifStatOp) { //TODO
+    public Object visit(IfStatOp ifStatOp) { //TODO test
+        String type = (String) ifStatOp.getExpr().accept(this);
+        if(!type.equalsIgnoreCase("boolean"))
+            throw new RuntimeException("La condizione dell'IF non è di tipo Booleano");
+
+        symbolTable = ifStatOp.getSymbolTable();
+        if(ifStatOp.getBody() != null)
+            ifStatOp.getBody().accept(this);
+
+        symbolTable = ifStatOp.getSymbolTable().getFather();
+
+        ifStatOp.getElifS().forEach(elifOp -> elifOp.accept(this));
+
+
+        if(ifStatOp.getElseBody() != null) {
+            symbolTable = ifStatOp.getElseTable();
+            ifStatOp.getElseBody().accept(this);
+            symbolTable = ifStatOp.getElseTable().getFather();
+        }
+
         return null;
     }
 
@@ -533,7 +603,61 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(ProcCallOp procCallOp) { //TODO
+    public Object visit(ProcCallOp procCallOp) {
+        //TODO
+        //tipi della firma della procedura chiamata
+        Optional<SymbolRecord> typeRecord= symbolTable.lookup(procCallOp.getId().getName());
+        SymbolType typeFunc= typeRecord.get().getSymbolType();
+        Iterator<ProcParamsOp> idFirma = null;
+
+
+        LinkedList<ProcParamsOp> paramsOps = typeRecord.get().getSymbolType().getParamsOps();
+        if(paramsOps != null) {
+            idFirma = paramsOps.iterator();
+
+
+            if (procCallOp.getProcExprs().getExprs().size() > typeFunc.getInputType().size())
+                throw new RuntimeException("Il numero di parametri della chiamata alla procedura:" + procCallOp.getId().getName() + " è superiore ai parametri della firma");
+            else if (procCallOp.getProcExprs().getExprs().size() < typeFunc.getInputType().size())
+                throw new RuntimeException("Il numero di parametri della chiamata alla procedura:" + procCallOp.getId().getName() + " è inferiore ai parametri della firma");
+
+            Iterator<TypeOp> iteratorFirma = typeFunc.getInputType().iterator();
+            Iterator<Expr> iteratorCall = procCallOp.getProcExprs().getExprs().iterator();
+
+            while (iteratorCall.hasNext() && iteratorFirma.hasNext()) {
+                Expr exprCall = iteratorCall.next();
+/*
+            if(exprCall instanceof FunCallOp){
+                String typeCheck = checkReturnFunCall(exprCall);
+                FunCallOp funCallOp = (FunCallOp) exprCall;
+                LinkedList<TypeOp> returnType = (LinkedList<TypeOp>) funCallOp.accept(this);
+                if(returnType.size() > 1)
+                    throw  new RuntimeException("La FunCall passata nella ProcCall restituisce più valori");
+
+                //TODO type return
+            }
+*/
+                TypeOp typeFirma = iteratorFirma.next();
+                //String typeCheck = (String) exprCall.accept(this);
+                String typeCheck = checkReturnFunCall(exprCall);
+
+                //check tipi
+                if (!typeCheck.equalsIgnoreCase(typeFirma.getType()))
+                    throw new RuntimeException("I tipi della chiamata alla procedura non corrispondono ai tipi nella firma");
+
+
+                boolean idCheck = idFirma.next().getParamId().getOut();
+                if (exprCall instanceof IdOp) {
+                    IdOp idCall = (IdOp) exprCall;
+                    if (!idCall.isRef() && idCheck)
+                        throw new RuntimeException("L'id: " + idCall.getName() + " nella chiamata deve essere passato per riferimento");
+                    if (idCall.isRef() && !idCheck)
+                        throw new RuntimeException("L'id: " + idCall.getName() + " nella chiamata non deve essere passato per riferimento");
+                }
+
+            }
+        }
+
         return null;
     }
 
@@ -544,6 +668,17 @@ public class TypeVisitor implements Visitor{
 
     @Override
     public Object visit(ReadOp readOp) { //TODO
+        for(Expr expr : readOp.getExprs()){
+            if(expr.getDollar() && !(expr instanceof IdOp) )
+                throw new RuntimeException("L'expr all'interno del $() deve essere necessariamente un ID");
+            if(expr instanceof IdOp && expr.getDollar()){
+                IdOp id = (IdOp) expr;
+                Optional<SymbolRecord> record = symbolTable.lookup(id.getName());
+                if(!record.get().getProperties())
+                    throw new RuntimeException("Impossibile assegnare la lettura alla variabile: " + id.getName() + " perchè immutabile");
+            }
+        }
+
         return null;
     }
 
