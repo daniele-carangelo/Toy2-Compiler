@@ -4,6 +4,7 @@ import esercitazione5.Expression.IdOp;
 import esercitazione5.SymbolTable.SymbolTable;
 import esercitazione5.visitor.Visitor;
 
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class ProcedureOp {
@@ -52,7 +53,7 @@ public class ProcedureOp {
         this.symbolTable = symbolTable;
     }
 
-    public Object accept(Visitor v){
+    public Object accept(Visitor v) throws IOException {
         return v.visit(this);
     }
 

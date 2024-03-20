@@ -14,6 +14,7 @@ import esercitazione5.SymbolTable.SymbolTable;
 import esercitazione5.SymbolTable.SymbolType;
 import esercitazione5.SymbolTable.TypeUtils;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,7 +42,13 @@ public class TypeVisitor implements Visitor{
                 throw new RuntimeException(e);
             }
         });
-        programOp.getProcedures().forEach(procedureOp -> procedureOp.accept(this));
+        programOp.getProcedures().forEach(procedureOp -> {
+            try {
+                procedureOp.accept(this);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         programOp.getVarDecls().forEach(varDeclOp -> varDeclOp.accept(this));
 
         return null;
@@ -57,7 +64,7 @@ public class TypeVisitor implements Visitor{
         return null;
     }
 
-    private String checkReturnFunCall(Expr expr){
+    private String checkReturnFunCall(Expr expr)  {
         LinkedList<TypeOp> returns;
         if(expr instanceof FunCallOp) {
             FunCallOp funcall = (FunCallOp) expr;
@@ -73,7 +80,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(DiffOp diffOp) {
+    public Object visit(DiffOp diffOp)  {
         String type1;
         String type2;
 /*
@@ -96,7 +103,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(DivOp divOp) {
+    public Object visit(DivOp divOp)  {
         String type1;
         String type2;
 
@@ -110,7 +117,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(MulOp mulOp) {
+    public Object visit(MulOp mulOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(mulOp.getExpr1());
@@ -123,7 +130,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(UminusOp uminusOp) {
+    public Object visit(UminusOp uminusOp)  {
         String type1;
         type1 = checkReturnFunCall(uminusOp.getExpr());
 
@@ -133,7 +140,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(AndOp andOp) {
+    public Object visit(AndOp andOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(andOp.getExpr1());
@@ -146,7 +153,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(EQOp eqOp) {
+    public Object visit(EQOp eqOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(eqOp.getExpr1());
@@ -159,7 +166,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(GEOp geOp) {
+    public Object visit(GEOp geOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(geOp.getExpr1());
@@ -172,7 +179,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(GTOp gtOp) {
+    public Object visit(GTOp gtOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(gtOp.getExpr1());
@@ -185,7 +192,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(LEOp leOp) {
+    public Object visit(LEOp leOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(leOp.getExpr1());
@@ -198,7 +205,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(LTOp ltOp) {
+    public Object visit(LTOp ltOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(ltOp.getExpr1());
@@ -211,7 +218,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(NEOp neOp) {
+    public Object visit(NEOp neOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(neOp.getExpr1());
@@ -224,7 +231,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(NotOp notOp) {
+    public Object visit(NotOp notOp)  {
         String type1;
         type1 = checkReturnFunCall(notOp.getExpr());
 
@@ -234,7 +241,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(OrOp orOp) {
+    public Object visit(OrOp orOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(orOp.getExpr1());
@@ -247,7 +254,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(FunCallOp funCallOp) {
+    public Object visit(FunCallOp funCallOp)  {
         //prendo i tipi dei parametri nella firma della funzione
         //SymbolType typeFunc = (SymbolType) funCallOp.getId().accept(this);
        Optional<SymbolRecord> typeRecord= symbolTable.lookup((String )funCallOp.getId().getName());
@@ -291,7 +298,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(ParOp parOp) {
+    public Object visit(ParOp parOp)  {
 
         return  (String) parOp.getExpr().accept(this);
     }
@@ -325,7 +332,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(AddOp addOp) {
+    public Object visit(AddOp addOp)  {
         String type1;
         String type2;
         type1 = checkReturnFunCall(addOp.getExpr1());
@@ -406,7 +413,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(FunOp funOp) throws Exception {
+    public Object visit(FunOp funOp)  {
         symbolTable = funOp.getSymbolTable();
 /*
         //check se nella dichiarazione c'è almeno un return
@@ -467,20 +474,18 @@ public class TypeVisitor implements Visitor{
         if(check)
             throw new RuntimeException("Nelle funzioni non è possibbile modificare i parametri");
 
-        symbolTable = funOp.getSymbolTable(); //check TODO
+        symbolTable = funOp.getSymbolTable();
         funOp.getBody().accept(this);
         return null;
     }
 
     @Override
-    public Object visit(IterOp iterOp) throws Exception {
-        //TODO null?
+    public Object visit(IterOp iterOp)  {
         return null;
     }
 
     @Override
     public Object visit(ProcedureOp procedureOp) {
-        //TODO
         symbolTable = procedureOp.getSymbolTable();
         //check se ci sono return
         LinkedList<ReturnStatOp> returnStmt = new LinkedList<>();
@@ -496,19 +501,18 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(ProcParamsOp procParamsOp) {  //TODO null?
+    public Object visit(ProcParamsOp procParamsOp) {
         return null;
     }
 
     @Override
-    public Object visit(ProcParamIdOp procParamIdOp) {  //TODO null?
+    public Object visit(ProcParamIdOp procParamIdOp) {
         return null;
     }
 
 
     @Override
     public Object visit(ReturnStatOp returnStatOp) {
-        //TODO
         LinkedList<String> typeReturn = new LinkedList<>();
         returnStatOp.getExprs().forEach(expr -> typeReturn.add((String) expr.accept(this)));
         return typeReturn;
@@ -516,6 +520,12 @@ public class TypeVisitor implements Visitor{
 
     @Override
     public Object visit(WriteOp writeOp) {
+
+        writeOp.getIOArgs().forEach(expr -> {
+                if(expr instanceof FunCallOp funCall && ((LinkedList<TypeOp>)funCall.accept(this)).size() > 1)
+                    throw new RuntimeException("La funzione chiamata nel return ritorna valori multipli");
+                    }
+                    );
 
         writeOp.getIOArgs().forEach(expr -> expr.accept(this));
 
@@ -529,7 +539,7 @@ public class TypeVisitor implements Visitor{
     }
 //-------------------------------------------------------------------
     @Override
-    public Object visit(AssignStatOp assignStatOp) {  //TODO
+    public Object visit(AssignStatOp assignStatOp)  {
         String type;
         Iterator<IdOp> ids = assignStatOp.getIds().iterator();
         if(assignStatOp.getIds().size() != assignStatOp.getExprs().size())
@@ -559,7 +569,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(ElifOp elifOp) { //TODO test
+    public Object visit(ElifOp elifOp)  {
 
         String type = (String )elifOp.getExpr().accept(this);
         if(!type.equalsIgnoreCase("boolean"))
@@ -574,7 +584,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(IfStatOp ifStatOp) { //TODO test
+    public Object visit(IfStatOp ifStatOp)  {
         String type = (String) ifStatOp.getExpr().accept(this);
         if(!type.equalsIgnoreCase("boolean"))
             throw new RuntimeException("La condizione dell'IF non è di tipo Booleano");
@@ -598,13 +608,13 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(Statement statement) { //TODO
+    public Object visit(Statement statement) {
         return null;
     }
 
     @Override
-    public Object visit(ProcCallOp procCallOp) {
-        //TODO
+    public Object visit(ProcCallOp procCallOp)  {
+
         //tipi della firma della procedura chiamata
         Optional<SymbolRecord> typeRecord= symbolTable.lookup(procCallOp.getId().getName());
         SymbolType typeFunc= typeRecord.get().getSymbolType();
@@ -634,7 +644,7 @@ public class TypeVisitor implements Visitor{
                 if(returnType.size() > 1)
                     throw  new RuntimeException("La FunCall passata nella ProcCall restituisce più valori");
 
-                //TODO type return
+
             }
 */
                 TypeOp typeFirma = iteratorFirma.next();
@@ -662,12 +672,12 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(ProcExprsOp procExprsOp) { //TODO
+    public Object visit(ProcExprsOp procExprsOp) {
         return null;
     }
 
     @Override
-    public Object visit(ReadOp readOp) { //TODO
+    public Object visit(ReadOp readOp) {
         for(Expr expr : readOp.getExprs()){
             if(expr.getDollar() && !(expr instanceof IdOp) )
                 throw new RuntimeException("L'expr all'interno del $() deve essere necessariamente un ID");
@@ -683,7 +693,7 @@ public class TypeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(WhileStatOp whileStatOp) {
+    public Object visit(WhileStatOp whileStatOp)  {
 
         String type = (String) whileStatOp.getExpr().accept(this);
         if(!type.equalsIgnoreCase("boolean"))

@@ -29,11 +29,13 @@ proc scoping(n : integer, m: integer):
            endif;
             -->! $(message);
         endif;
-    -->! $(message);
+    -->! message ;
 
 endproc
 
-
+func glob2() -> integer:
+    return message;
+endfunc
 
 proc main():
     var message ^= "level 0";\

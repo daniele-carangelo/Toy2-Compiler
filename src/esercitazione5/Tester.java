@@ -39,7 +39,7 @@ public class Tester {
             TypeVisitor typeVisitor = new TypeVisitor();
             program.accept(typeVisitor);
 
-            /*
+/*
             XmlGenerator xml = new XmlGenerator();
             Document doc = (Document) program.accept(xml);
 
@@ -50,9 +50,9 @@ public class Tester {
             StreamResult streamResult = new StreamResult(new File(System.getProperty("user.dir")+"\\albero_sintattico.xml"));
             transformer.transform(domSource, streamResult);
             System.out.println("Il File XML è stato generato correttamente.");
+
 */
-
-
+        System.out.println("Compilazione Eseguita con successo");
 
         } catch (Exception e) {
             e.printStackTrace();

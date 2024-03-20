@@ -2,6 +2,8 @@ package esercitazione5.Expression;
 
 import esercitazione5.visitor.Visitor;
 
+import java.io.IOException;
+
 public abstract class Expr {
 
     private Boolean dollar = false ;
@@ -16,7 +18,7 @@ public abstract class Expr {
     }
 
     public String toString() {return super.toString();}
-    public Object accept(Visitor v){
+    public Object accept(Visitor v)  {
         return v.visit(this);
     }
 

@@ -530,16 +530,6 @@ public class XmlGenerator implements Visitor{
             }
             procExprsOpElement.appendChild(exprListElement);
         }
-        //TODO
-/*
-        if(!procExprsOp.getRefId().isEmpty()){
-            Element refIdElement = document.createElement("RefIdList");
-            for(IdOp idOp : procExprsOp.getRefId()){
-                refIdElement.appendChild((Element) idOp.accept(this));
-            }
-            procExprsOpElement.appendChild(refIdElement);
-        }
-*/
 
         return procExprsOpElement;
     }

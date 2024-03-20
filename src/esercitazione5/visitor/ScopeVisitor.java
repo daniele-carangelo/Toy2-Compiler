@@ -13,6 +13,7 @@ import esercitazione5.SymbolTable.SymbolRecord;
 import esercitazione5.SymbolTable.SymbolTable;
 import esercitazione5.SymbolTable.SymbolType;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,14 +46,14 @@ public class ScopeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(GTOp gtOp) {
+    public Object visit(GTOp gtOp)  {
         gtOp.getExpr1().accept(this);
         gtOp.getExpr2().accept(this);
         return null;
     }
 
     @Override
-    public Object visit(LEOp leOp) {
+    public Object visit(LEOp leOp)  {
         leOp.getExpr1().accept(this);
         leOp.getExpr2().accept(this);
         return null;
@@ -220,7 +221,13 @@ public class ScopeVisitor implements Visitor{
         }
 
         programOp.getVarDecls().forEach(varDeclOp -> varDeclOp.accept(this));
-        programOp.getProcedures().forEach(procOp -> procOp.accept(this));
+        programOp.getProcedures().forEach(procOp -> {
+            try {
+                procOp.accept(this);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         programOp.getFunctions().forEach(funOp -> {
             try {
                 funOp.accept(this);
@@ -361,7 +368,7 @@ public class ScopeVisitor implements Visitor{
     }
 
     @Override
-    public Object visit(IterOp iterOp) throws Exception {
+    public Object visit(IterOp iterOp)  {
         return null;
     }
 
@@ -446,9 +453,7 @@ public class ScopeVisitor implements Visitor{
 
     @Override
     public Object visit(ProcExprsOp procExprsOp) {
-        //TODO qui solo exp.accept
         procExprsOp.getExprs().forEach(expr -> expr.accept(this));
-        //procExprsOp.getRefId().forEach(idOp -> idOp.accept(this));
         return null;
     }
 
