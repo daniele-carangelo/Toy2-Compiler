@@ -5,7 +5,7 @@ import esercitazione5.visitor.Visitor;
 
 public class AddOp extends Expr {
     private Expr expr1, expr2;
-
+    private boolean concat = false;
     public AddOp(Expr expr1, Expr expr2) {
         this.expr1 = expr1;
         this.expr2 = expr2;
@@ -26,6 +26,14 @@ public class AddOp extends Expr {
 
     public void setExpr2(Expr expr2) {
         this.expr2 = expr2;
+    }
+
+    public boolean isConcat() {
+        return concat;
+    }
+
+    public void setConcat(boolean concat) {
+        this.concat = concat;
     }
 
     public Object accept(Visitor v){

@@ -14,9 +14,10 @@ proc sommac(a: integer, d: integer, b:real, out size: string, out result: real):
 
 	result  ^=  a + b + c + d;
 
+
 	if result > 100 then
-		var valore ^= "grande";\
- 		size ^= valore;
+		var valore1 ^= "grande";\
+ 		size ^= valore1;
 	elseif result > 50 then
 		var valore ^= "media";\
  		size ^= valore;
@@ -49,7 +50,7 @@ proc main():
 	<-- "vuoi continuare? (si/no) - inserisci due volte la risposta\n" $(ans) $(ans1) ;
 	while ans = "si" do
 	    <-- "inserisci un intero:" $(a);
-	    <-- "inserisci un reale:" $(b);
+	    <-- "inserisci un reale:si" $(b);
 	    sommac(a, x, b, @taglia, @risultato);
 	    valore ^= stampa("la somma di " + a + " e " + b +  " incrementata di " + c + " e' " + taglia);
 	    valore ^= stampa(" ed e' pari a " + risultato);

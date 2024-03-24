@@ -1436,8 +1436,8 @@ class CUP$Parser$actions {
 		int listright = ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()).right;
 		LinkedList<Expr> list = (LinkedList<Expr>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		 expr2.setDollar(true);
-               list.add(expr1);
                list.add(expr2);
+               list.add(expr1);
                RESULT = list; 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("IOArgs",26, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }

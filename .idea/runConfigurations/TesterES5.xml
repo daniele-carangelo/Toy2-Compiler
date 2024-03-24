@@ -2,7 +2,7 @@
   <configuration default="false" name="TesterES5" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="esercitazione5.Tester" />
     <module name="Imparato-Carangelo_es5" />
-    <option name="PROGRAM_PARAMETERS" value="valid3.txt" />
+    <option name="PROGRAM_PARAMETERS" value="valid2.txt" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

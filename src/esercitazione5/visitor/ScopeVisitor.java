@@ -341,7 +341,7 @@ public class ScopeVisitor implements Visitor{
 
         Boolean type = (procParamsOp.getParamId().getOut()) ? true : false;
         SymbolRecord record = new SymbolRecord(procParamsOp.getParamId().getId().getName(),
-                "var",new SymbolType(new LinkedList<TypeOp>(List.of(procParamsOp.getType()))), type);
+                "varProc",new SymbolType(new LinkedList<TypeOp>(List.of(procParamsOp.getType()))), type);
         table.addRecord(record);
 
         return null;

@@ -322,8 +322,8 @@ IOArgs ::= Expr:expr
                RESULT = exprList; :}
           | Expr:expr1 DOLLARSIGN LPAR Expr:expr2 RPAR IOArgs:list
             {: expr2.setDollar(true);
-               list.add(expr1);
                list.add(expr2);
+               list.add(expr1);
                RESULT = list; :}
           | DOLLARSIGN LPAR Expr:expr RPAR IOArgs:list
             {: expr.setDollar(true);

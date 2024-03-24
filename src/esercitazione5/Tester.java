@@ -1,6 +1,7 @@
 package esercitazione5;
 
 import esercitazione5.Node.ProgramOp;
+import esercitazione5.visitor.CodeGenVisitor;
 import esercitazione5.visitor.ScopeVisitor;
 import esercitazione5.visitor.TypeVisitor;
 import esercitazione5.visitor.XmlGenerator;
@@ -39,6 +40,10 @@ public class Tester {
             TypeVisitor typeVisitor = new TypeVisitor();
             program.accept(typeVisitor);
 
+            CodeGenVisitor codeGenVisitor = new CodeGenVisitor(args[0].substring(0,args[0].lastIndexOf(".")), typeVisitor);
+            program.accept(codeGenVisitor);
+
+
 /*
             XmlGenerator xml = new XmlGenerator();
             Document doc = (Document) program.accept(xml);
@@ -52,7 +57,7 @@ public class Tester {
             System.out.println("Il File XML è stato generato correttamente.");
 
 */
-        System.out.println("Compilazione Eseguita con successo");
+        System.out.println("Compilazione Eseguita con successo");  //TODO togliere alla fine dei test
 
         } catch (Exception e) {
             e.printStackTrace();

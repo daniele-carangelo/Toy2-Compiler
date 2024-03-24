@@ -29,7 +29,11 @@ proc scoping(n : integer, m: integer):
            endif;
             -->! $(message);
         endif;
-    -->! message ;
+ciao1 ^= glob2();
+        var ciao1, ciao2 : integer ;\
+
+
+    -->! $(glob2()) ;
 
 endproc
 
@@ -39,24 +43,26 @@ endfunc
 
 proc main():
     var message ^= "level 0";\
-    var n, m : integer;\
-    var k ^= 6;\
+
+    var n, m ,k: integer;\
+
+   n, message ^= glob();
 
     while k >= 1 do
         <-- "Inserisci n "  $(n);
-        <-- "Inserisci m "  $(m);
-        -->! "I valori inseriti sono " $(n) "e " $(m);
+        <-- "Inserisci m "  $(m) ;
+        -->! "I valori inseriti sono " $(k) "e " $(m);
         scoping(n, m);
         k ^= k-1;
     endwhile;
 
     -->! $(message);
-    -->! $(glob());
+    -->! $(3);
 endproc
 
 
-func glob() -> integer:
-    return message;
+func glob() -> integer,string:
+    return message,"ciao";
 endfunc
 
 var message ^= 100;\

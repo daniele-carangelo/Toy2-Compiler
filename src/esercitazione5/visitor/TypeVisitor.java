@@ -293,6 +293,7 @@ public class TypeVisitor implements Visitor{
     @Override
     public Object visit(IdOp idOp) {
         String type = symbolTable.typeOfId(idOp).getOutputType().get(0).getType();
+        idOp.type = type;
         //return symbolTable.typeOfId(idOp);
         return type;
     }
@@ -308,7 +309,6 @@ public class TypeVisitor implements Visitor{
 
         if(!bodyOp.getStmt().isEmpty())
             bodyOp.getStmt().forEach(statement -> statement.accept(this));
-
 
         if(!bodyOp.getVarDecl().isEmpty())
             bodyOp.getVarDecl().forEach(vars -> vars.accept(this));
@@ -340,6 +340,8 @@ public class TypeVisitor implements Visitor{
 
         String op = addOp.type;
 
+        if(type1.equalsIgnoreCase("string") || type2.equalsIgnoreCase("string"))
+            addOp.setConcat(true);
 
         return TypeUtils.getType(op, type1, type2);
     }
@@ -514,7 +516,15 @@ public class TypeVisitor implements Visitor{
     @Override
     public Object visit(ReturnStatOp returnStatOp) {
         LinkedList<String> typeReturn = new LinkedList<>();
-        returnStatOp.getExprs().forEach(expr -> typeReturn.add((String) expr.accept(this)));
+
+        returnStatOp.getExprs().forEach(expr -> {
+            if(expr instanceof FunCallOp funCallOp) {
+               LinkedList<TypeOp> typeOps = (LinkedList<TypeOp>) funCallOp.accept(this);
+                typeReturn.addAll(typeOps.stream().map(TypeOp::getType).toList());
+            }
+            else
+                typeReturn.add((String) expr.accept(this));
+        });
         return typeReturn;
     }
 
@@ -542,28 +552,47 @@ public class TypeVisitor implements Visitor{
     public Object visit(AssignStatOp assignStatOp)  {
         String type;
         Iterator<IdOp> ids = assignStatOp.getIds().iterator();
-        if(assignStatOp.getIds().size() != assignStatOp.getExprs().size())
-            throw new RuntimeException("Numero di ID nell'assegnazione diverso dal numero delle EXPR");
+        LinkedList<Expr> exprs = assignStatOp.getExprs();
+        boolean check = false;
+        if(assignStatOp.getExprs().size() == 1 && assignStatOp.getExprs().get(0) instanceof FunCallOp ){
+            check=true;
+            FunCallOp funCall= (FunCallOp) assignStatOp.getExprs().get(0);
+            LinkedList<TypeOp> typesFunCall = (LinkedList<TypeOp>) funCall.accept(this);
+            if(assignStatOp.getIds().size() != typesFunCall.size())
+                throw new RuntimeException("Numero di ID nell'assegnazione diverso dal numero dei valori ritornati dalla funzione");
+            Iterator<TypeOp> typeOpIterator = typesFunCall.iterator();
+            Iterator<IdOp> idOpIterator = assignStatOp.getIds().iterator();
+            while (typeOpIterator.hasNext() && idOpIterator.hasNext()){
+                String idType = (String) idOpIterator.next().accept(this);
+                if(!idType.equalsIgnoreCase((typeOpIterator.next()).getType()))
+                    throw new RuntimeException("i tipi di ritorno della funzione non corrispondono nell'assegnazione");
 
-        for(Expr expr : assignStatOp.getExprs()){
-            type = checkReturnFunCall(expr);
-            IdOp name = ids.next();
-            Optional<SymbolRecord> record1 = symbolTable.lookup(name.getName());
-            if(record1.get().getKind().equals("function") || record1.get().getKind().equals("procedure"))
-                throw new RuntimeException("Impossibile assegnare ad una funziona o procedura");
-
-            String typeId = (String) name.accept(this);
-            Optional<SymbolRecord> record = symbolTable.lookup(name.getName());
-            if(record.isPresent())
-                if(!record.get().getProperties())
-                    throw new RuntimeException("L'ID: "+ name.getName() + " non può essere assegnato");
-
-            if(!type.equalsIgnoreCase(typeId))
-                if(!(typeId.equalsIgnoreCase("float") && type.equalsIgnoreCase("int")))
-                    throw new RuntimeException("Il type di: "+ name.getName() + " non corrisponde con il tipo dell'espressione associata");
-
-
+            }
         }
+        else if(assignStatOp.getIds().size() != assignStatOp.getExprs().size())
+                throw new RuntimeException("Numero di ID nell'assegnazione diverso dal numero delle EXPR");
+
+            if(!check)
+            for (Expr expr : exprs) {
+                type = checkReturnFunCall(expr);
+                IdOp name = ids.next();
+                Optional<SymbolRecord> record1 = symbolTable.lookup(name.getName());
+                if (record1.get().getKind().equals("function") || record1.get().getKind().equals("procedure"))
+                    throw new RuntimeException("Impossibile assegnare ad una funziona o procedura");
+
+                String typeId = (String) name.accept(this);
+                Optional<SymbolRecord> record = symbolTable.lookup(name.getName());
+                if (record.isPresent())
+                    if (!record.get().getProperties())
+                        throw new RuntimeException("L'ID: " + name.getName() + " non può essere assegnato");
+
+                if (!type.equalsIgnoreCase(typeId))
+                    if (!(typeId.equalsIgnoreCase("float") && type.equalsIgnoreCase("int")))
+                        throw new RuntimeException("Il type di: " + name.getName() + " non corrisponde con il tipo dell'espressione associata");
+
+
+            }
+
 
         return null;
     }
