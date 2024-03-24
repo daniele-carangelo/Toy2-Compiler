@@ -132,7 +132,9 @@ public class CodeGenVisitor implements Visitor {
         if(!funList.isEmpty())
             for(FunOp funOp : funList){
                 try {
+
                     if(funOp.getTypes().size() > 1) {
+                        Collections.reverse(funOp.getTypes());
                         fileWriter.write("typedef struct{\n");
                         for (int i = 0; i < funOp.getTypes().size(); i++) {
                             funOp.getTypes().get(i).accept(this);
@@ -1006,13 +1008,14 @@ Collections.reverse(funCallOp.getExprs());
         //se più valori da ritornare definisco e inizializzo la struct
         try {
         if(returnStatOp.getExprs().size() > 1){
+            Collections.reverse(returnStatOp.getExprs());
             fileWriter.write("returnOf" + table.getScope() + " structReturn;\n");
             for(int i=0; i < returnStatOp.getExprs().size(); i++){
                 fileWriter.write("structReturn.returnValue" + (i+1) +" = ");
                 if(returnStatOp.getExprs().get(i) instanceof StringOp) {
-                    fileWriter.write("\"");
+                   // fileWriter.write("\"");
                     returnStatOp.getExprs().get(i).accept(this);
-                    fileWriter.write("\"");
+                   // fileWriter.write("\"");
                 }
                 else
                     returnStatOp.getExprs().get(i).accept(this);

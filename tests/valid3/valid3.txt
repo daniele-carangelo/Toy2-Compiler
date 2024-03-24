@@ -58,5 +58,3 @@ func glob() -> integer:
 endfunc
 
 var message ^= 100;\
-
-
