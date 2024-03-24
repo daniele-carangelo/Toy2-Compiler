@@ -38,7 +38,11 @@ public class Tester {
             program.accept(typeVisitor);
 
             String name = "";
-            int separatorIndex = args[0].lastIndexOf("\\");
+            int separatorIndex = args[0].lastIndexOf("\\" );
+            if(separatorIndex == -1)
+                separatorIndex = args[0].lastIndexOf("/");
+
+
             int extensionIndex = args[0].lastIndexOf(".");
             if (separatorIndex != -1 && extensionIndex != -1 && separatorIndex < extensionIndex)
                 name = args[0].substring(separatorIndex + 1, extensionIndex);
